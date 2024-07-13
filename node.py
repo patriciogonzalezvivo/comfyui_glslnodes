@@ -33,7 +33,7 @@ def resolveLygia(src: str):
             print("Adding dependecy", url)
             if url.startswith("lygia"):
                 url = url.replace("lygia", "https://lygia.xyz")
-                
+
                 response = requests.get(url)
                 if response.status_code == 200:
                     source += response.text + "\n"
@@ -45,6 +45,21 @@ def resolveLygia(src: str):
 
     return source
 
+class ImageTexture:
+    def __init__(self, image):
+        self.ctx = moderngl.get_context()
+
+        print("image shape", image.shape[1::-1], image.shape[2])
+
+        self.texture = self.ctx.texture(image.shape[1::-1], image.shape[2])
+        self.texture.read_into(image)
+        self.sampler = self.ctx.sampler(texture=self.texture)
+        self.sampler.filter = (self.ctx.NEAREST, self.ctx.NEAREST)
+
+    def use(self, index):
+        self.texture.use(index)
+        self.sampler.use(index)
+
 
 class GlslNode:
     @classmethod
@@ -54,13 +69,16 @@ class GlslNode:
                 "width": ("INT", { "default": 512 }),
                 "height": ("INT", { "default": 512 }),
                 "fragment_shader": ("STRING", {"multiline": True, "default": fragment_shader}),
+            },
+            "optional": {
+                "u_tex": ("IMAGE", { "multi": True }),
             }
         }
     CATEGORY = "GlslNode"
     FUNCTION = "main"
     RETURN_TYPES = ("IMAGE", )
 
-    def main(self, width, height, fragment_shader):
+    def main(self, width, height, fragment_shader, u_tex=None):
         fragment_shader = resolveLygia(fragment_shader)
 
         ctx = moderngl.create_context(
@@ -111,6 +129,21 @@ class GlslNode:
 
         if 'u_resolution' in vao.program:
             vao.program['u_resolution'] = (float(width), float(height))
+
+        if u_tex is not None:
+
+            for i, image in enumerate(u_tex):
+                name = f"u_tex{i}"
+                if name in vao.program:
+                    # convert image from torch tensor to numpy array
+                    print("loading", name)
+                    image = image.numpy()
+                    image = np.flip(image, 0)
+                    image = (image * 255).astype(np.uint8)
+                    texture = ImageTexture(image)
+                    texture.use(i)
+                    vao.program[name] = i + 1
+
 
         vao.render()
 

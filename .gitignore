@@ -1,0 +1,7 @@
+__pycache__
+/venv
+/checkpoints
+.vscode
+*.ckpt
+*.safetensors
+types

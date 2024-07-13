@@ -1,13 +1,15 @@
 # GLSL Nodes for ComfyUI
 
-This nodes add support for GLSL shaders for image editing following patterns compatible with [GlslViewer](https://github.com/patriciogonzalezvivo/glslViewer), [Glsl-Pipeline](https://github.com/patriciogonzalezvivo/glsl-pipeline/) and [GlslCanvas](https://marketplace.visualstudio.com/items?itemName=circledev.glsl-canvas).
+![image](https://github.com/user-attachments/assets/723c36a3-d5d1-488a-8d9a-388d942f69db)
 
-It contain support for [LYGIA Shader Library](https://lygia.xyz/) by resolving the `#include` directives from [LYGIA's Server](https://lygia.xyz/)
+This nodes add support for GLSL shaders on workflows.
 
-With the following specs for:
+Features:
 
-* [Uniforms](https://github.com/patriciogonzalezvivo/glslViewer/wiki/GlslViewer-UNIFORMS)
-* [Defines](https://github.com/patriciogonzalezvivo/glslViewer/wiki/GlslViewer-DEFINES)
+* It the code is compatible with [GlslViewer](https://github.com/patriciogonzalezvivo/glslViewer), [Glsl-Pipeline](https://github.com/patriciogonzalezvivo/glsl-pipeline/) and [GlslCanvas](https://marketplace.visualstudio.com/items?itemName=circledev.glsl-canvas) by following the following specs for:
+  * [Uniforms](https://github.com/patriciogonzalezvivo/glslViewer/wiki/GlslViewer-UNIFORMS)
+  * [Defines](https://github.com/patriciogonzalezvivo/glslViewer/wiki/GlslViewer-DEFINES)
+* It contain support for [LYGIA Shader Library](https://lygia.xyz/) by resolving all `#include` directives from [LYGIA's Server](https://lygia.xyz/)
 
 # Roadmap
 

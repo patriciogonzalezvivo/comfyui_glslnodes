@@ -5,8 +5,7 @@ import re
 import numpy as np
 import torch
 
-fragment_shader="""
-#ifdef GL_ES
+fragment_shader="""#ifdef GL_ES
 precision mediump float;
 #endif
 
@@ -51,8 +50,7 @@ class ImageTexture:
 
         print("image shape", image.shape[1::-1], image.shape[2])
 
-        self.texture = self.ctx.texture(image.shape[1::-1], image.shape[2])
-        self.texture.read_into(image)
+        self.texture = self.ctx.texture(image.shape[1::-1], image.shape[2], image)
         self.sampler = self.ctx.sampler(texture=self.texture)
         self.sampler.filter = (self.ctx.NEAREST, self.ctx.NEAREST)
 
@@ -142,7 +140,7 @@ class GlslNode:
                     image = (image * 255).astype(np.uint8)
                     texture = ImageTexture(image)
                     texture.use(i)
-                    vao.program[name] = i + 1
+                    vao.program[name] = i
 
 
         vao.render()

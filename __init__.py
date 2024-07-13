@@ -1,3 +1,10 @@
+"""
+@author: Patricio Gonzalez Vivo
+@title: GLSL Nodes
+@nickname: GLSL Nodes
+@description: A set of nodes to work with GLSL shaders
+"""
+
 from .node import *
 from .install import *
 

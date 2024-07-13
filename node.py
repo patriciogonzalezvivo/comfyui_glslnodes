@@ -8,6 +8,8 @@ from torchvision.transforms import PILToTensor
 from PIL import Image
 import torch
 
+import comfy.utils
+
 fragment_shader="""#ifdef GL_ES
 precision mediump float;
 #endif
@@ -23,7 +25,6 @@ void main() {
 }
 """
 
-
 def resolveLygia(src: str):
     source = ""
     lines = src.split("\n")
@@ -36,7 +37,9 @@ def resolveLygia(src: str):
             if url.startswith("lygia"):
                 url = url.replace("lygia", "https://lygia.xyz")
 
-                response = requests.get(url)
+                response = requests.get(url, headers={
+                    "Origin": "ComfyUI Server",
+                })
                 if response.status_code == 200:
                     source += response.text + "\n"
                 else:

@@ -16,7 +16,7 @@ Features:
 - [x] Add support for GLSL shaders
 - [x] Add support for [LYGIA Shader Library](https://lygia.xyz/)
 - [ ] Add JS editor on the node client UI 
-- [ ] Add support for multiple frames
+- [x] Add support for multiple frames
 - [ ] Add support for multiple textures
 - [ ] Add support for multiple float uniforms
 - [ ] Add support for multiple buffers (`#ifdef BUFFER_X`)

@@ -59,25 +59,46 @@ class ImageTexture:
         self.sampler.use(index)
 
 
-class GlslNode:
+class GlslEditor:
     @classmethod
     def INPUT_TYPES(cls):
         return {
             "required": {
+                "glsl_code": ("STRING", {"multiline": True, "default": fragment_shader}),
+            },
+        }
+    CATEGORY = "GLSL"
+    FUNCTION = "main"
+    # OUTPUT_NODE = True
+    RETURN_TYPES = ("GLSL_CODE", )
+
+    def main(self, glsl_code):
+        out = resolveLygia(glsl_code)
+        return (out,)
+        # return {"ui": {"text": (out,)}, "result": (out,)}
+
+
+class GlslViewer:
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "fragment_code": ("GLSL_CODE", { "dynamicPrompts": False }),
                 "width": ("INT", { "default": 512 }),
                 "height": ("INT", { "default": 512 }),
-                "fragment_shader": ("STRING", {"multiline": True, "default": fragment_shader}),
             },
             "optional": {
                 "u_tex": ("IMAGE", { "multi": True }),
+                # TODO: add support for vertex shader and 3D models
+                # "vertex_shader": ("STRING"),
+                # "3D_model": ("3D_MODEL", { "default": None }),
             }
         }
-    CATEGORY = "GlslNode"
+    CATEGORY = "GLSL"
     FUNCTION = "main"
     RETURN_TYPES = ("IMAGE", )
 
-    def main(self, width, height, fragment_shader, u_tex=None):
-        fragment_shader = resolveLygia(fragment_shader)
+    def main(self, fragment_code, width, height, u_tex=None):
 
         ctx = moderngl.create_context(
             standalone=True,
@@ -156,3 +177,6 @@ class GlslNode:
         image = torch.from_numpy(image)[None,]
         
         return (image, )
+    
+    def IS_CHANGED(self, **kwargs):
+        return float("nan")

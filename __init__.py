@@ -2,7 +2,8 @@ from .node import *
 from .install import *
 
 NODE_CLASS_MAPPINGS = {
-    'glslNode': GlslNode,
+    'glslViewer': GlslViewer,
+    'glslEditor': GlslEditor,
 }
 
 __all__ = ['NODE_CLASS_MAPPINGS']

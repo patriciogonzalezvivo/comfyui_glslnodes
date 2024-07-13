@@ -123,7 +123,7 @@ class GlslViewer:
                 gl_Position = vec4(a_position, 0.0, 1.0);;
             }
             """,
-            fragment_shader= "#version 100\n" + fragment_shader)
+            fragment_shader= "#version 100\n" + fragment_code)
 
         # Create a simple billboard quad, where the first 4 floats is the postion followed by the texture coordinates
         vertices = np.array([

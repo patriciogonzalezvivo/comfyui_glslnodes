@@ -2,6 +2,8 @@
 
 ![image](https://github.com/user-attachments/assets/723c36a3-d5d1-488a-8d9a-388d942f69db)
 
+https://github.com/user-attachments/assets/4a60ac77-2a2f-4f85-8d0b-6915d35c2913
+
 This nodes add support for GLSL shaders on workflows.
 
 Features:

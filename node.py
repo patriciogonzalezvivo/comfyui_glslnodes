@@ -3,6 +3,9 @@ import requests
 import re
 
 import numpy as np
+import comfy.utils
+from torchvision.transforms import PILToTensor
+from PIL import Image
 import torch
 
 fragment_shader="""#ifdef GL_ES
@@ -44,12 +47,10 @@ def resolveLygia(src: str):
 
     return source
 
+
 class ImageTexture:
     def __init__(self, image):
         self.ctx = moderngl.get_context()
-
-        print("image shape", image.shape[1::-1], image.shape[2])
-
         self.texture = self.ctx.texture(image.shape[1::-1], image.shape[2], image)
         self.sampler = self.ctx.sampler(texture=self.texture)
         self.sampler.filter = (self.ctx.NEAREST, self.ctx.NEAREST)
@@ -69,13 +70,11 @@ class GlslEditor:
         }
     CATEGORY = "GLSL"
     FUNCTION = "main"
-    # OUTPUT_NODE = True
     RETURN_TYPES = ("GLSL_CODE", )
 
     def main(self, glsl_code):
         out = resolveLygia(glsl_code)
         return (out,)
-        # return {"ui": {"text": (out,)}, "result": (out,)}
 
 
 class GlslViewer:
@@ -86,9 +85,12 @@ class GlslViewer:
                 "fragment_code": ("GLSL_CODE", { "dynamicPrompts": False }),
                 "width": ("INT", { "default": 512 }),
                 "height": ("INT", { "default": 512 }),
+                "frames": ("INT", { "default": 1 }),
+                "fps": ("INT", { "default": 30 }),
             },
             "optional": {
                 "u_tex": ("IMAGE", { "multi": True }),
+
                 # TODO: add support for vertex shader and 3D models
                 # "vertex_shader": ("STRING"),
                 # "3D_model": ("3D_MODEL", { "default": None }),
@@ -96,9 +98,11 @@ class GlslViewer:
         }
     CATEGORY = "GLSL"
     FUNCTION = "main"
-    RETURN_TYPES = ("IMAGE", )
 
-    def main(self, fragment_code, width, height, u_tex=None):
+    RETURN_TYPES = ("IMAGE", "MASK")
+    RETURN_NAMES = ("images", "mask")
+
+    def main(self, fragment_code, width, height, frames, fps, u_tex=None):
 
         ctx = moderngl.create_context(
             standalone=True,
@@ -139,23 +143,27 @@ class GlslViewer:
 
         vbo = ctx.buffer(vertices)
         vao = ctx.simple_vertex_array(prog, vbo, 'a_position')
-        fbo = ctx.framebuffer(
-            color_attachments=[ctx.texture((width, height), 4)]
-        )
 
-        fbo.use()
-        ctx.clear()
+        fboaa = ctx.simple_framebuffer((width, height), components=4, samples=8)
+        fboaa.use()
+        
+        # fbo = ctx.framebuffer(color_attachments=[ctx.texture((width, height), 4)])
+        fbo = ctx.simple_framebuffer((width, height), components=4)
+        # fbo.use()
+
+        # ctx.clear()
 
         if 'u_resolution' in vao.program:
             vao.program['u_resolution'] = (float(width), float(height))
+        
+        if 'u_fps' in vao.program:
+            vao.program['u_fps'] = fps
 
         if u_tex is not None:
-
             for i, image in enumerate(u_tex):
                 name = f"u_tex{i}"
                 if name in vao.program:
                     # convert image from torch tensor to numpy array
-                    print("loading", name)
                     image = image.numpy()
                     image = np.flip(image, 0)
                     image = (image * 255).astype(np.uint8)
@@ -163,20 +171,36 @@ class GlslViewer:
                     texture.use(i)
                     vao.program[name] = i
 
+        images_out = []
+        masks_out = []
+        ptt = PILToTensor()
+        pbar = comfy.utils.ProgressBar(frames)
+        for i in range(frames):
+            if comfy.utils.PROGRESS_BAR_ENABLED:
+                pbar.update_absolute(i + 1, frames)
 
-        vao.render()
+            if 'u_frame' in vao.program:
+                vao.program['u_frame'] = i
 
-        data = fbo.read(components=4)
+            if 'u_time' in vao.program:
+                vao.program['u_time'] = i / fps
 
-        np_image = np.frombuffer(data, dtype=np.uint8).reshape((*fbo.size[1::-1], 4))
-        
-        # flip image in Y the X axis
-        np_image = np.flip(np_image, 0)
+            ctx.clear(0.0, 0.0, 0.0, 0.0)
+            vao.render(mode=moderngl.TRIANGLES)
 
-        image = np.array(np_image).astype(np.float32) / 255.0
-        image = torch.from_numpy(image)[None,]
-        
-        return (image, )
+            ctx.copy_framebuffer(dst=fbo, src=fboaa)
+            data = fbo.read(components=4)
+
+            image = Image.frombytes("RGBA", fbo.size, data)
+            image = ptt(image)
+
+            image = image.permute(1, 2, 0).float().mul(1.0 / 255.0)
+            image = image.flip(0)
+
+            images_out.append(image[:, :, :3].unsqueeze(0))
+            masks_out.append(image[:, :, 3].squeeze().unsqueeze(0))
+
+        return (torch.cat(images_out, dim=0), torch.stack(masks_out, dim=0))
     
     def IS_CHANGED(self, **kwargs):
         return float("nan")

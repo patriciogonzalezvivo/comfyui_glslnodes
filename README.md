@@ -1,6 +1,8 @@
 # GLSL Nodes for ComfyUI
 
-This nodes add support for GLSL shaders for image editing following patterns compatible with [GlslViewer](https://github.com/patriciogonzalezvivo/glslViewer), [Glsl-Pipeline](https://github.com/patriciogonzalezvivo/glsl-pipeline/) and [GlslCanvas](https://marketplace.visualstudio.com/items?itemName=circledev.glsl-canvas) 
+This nodes add support for GLSL shaders for image editing following patterns compatible with [GlslViewer](https://github.com/patriciogonzalezvivo/glslViewer), [Glsl-Pipeline](https://github.com/patriciogonzalezvivo/glsl-pipeline/) and [GlslCanvas](https://marketplace.visualstudio.com/items?itemName=circledev.glsl-canvas).
+
+It contain support for [LYGIA Shader Library](https://lygia.xyz/) by resolving the `#include` directives from [LYGIA's Server](https://lygia.xyz/)
 
 With the following specs for:
 
@@ -10,6 +12,7 @@ With the following specs for:
 # Roadmap
 
 - [x] Add support for GLSL shaders
+- [x] Add support for [LYGIA Shader Library](https://lygia.xyz/)
 - [ ] Add JS editor on the node client UI 
 - [ ] Add support for multiple frames
 - [ ] Add support for multiple textures

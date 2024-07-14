@@ -148,10 +148,17 @@ class GlslViewer:
                 "fps": ("INT", { "default": 30 }),
             },
             "optional": {
+                # TODO make this dynamic
                 "u_tex0": ("IMAGE", { "multi": True }),
                 "u_tex1": ("IMAGE", { "multi": True }),
                 "u_tex2": ("IMAGE", { "multi": True }),
                 "u_tex3": ("IMAGE", { "multi": True }),
+
+                # TODO make this dynamic
+                "u_val0": ("FLOAT", { "multi": True }),
+                "u_val1": ("FLOAT", { "multi": True }),
+                "u_val2": ("FLOAT", { "multi": True }),
+                "u_val3": ("FLOAT", { "multi": True }),
 
                 # TODO: add support for vertex shader and 3D models
                 # "vertex_shader": ("STRING"),
@@ -164,7 +171,11 @@ class GlslViewer:
     RETURN_TYPES = ("IMAGE", "MASK")
     RETURN_NAMES = ("images", "mask")
 
-    def main(self, fragment_code, width, height, frames, fps, u_tex0=None, u_tex1=None, u_tex2=None, u_tex3=None):
+    def main(self, fragment_code, width, height, frames, fps, 
+             # TODO make this dynamic
+             u_tex0=None, u_tex1=None, u_tex2=None, u_tex3=None,
+             # TODO make this dynamic
+             u_val0=None, u_val1=None, u_val2=None, u_val3=None):
 
         ctx = moderngl.create_context(
             standalone=True,
@@ -257,6 +268,31 @@ class GlslViewer:
             else:
                 texture = ImageArrayTexture(u_tex3, "u_tex3")
                 texture.use(0, vao.program)
+
+        # TODO make this dynamic
+        if u_val0 is not None and 'u_val0' in vao.program:
+            if type(u_val0) is int or type(u_val0) is float:
+                vao.program['u_val0'] = u_val0
+            elif type(u_val0) is list or type(u_val0) is tuple:
+                vao.program['u_val0'] = u_val0
+
+        if u_val1 is not None and 'u_val1' in vao.program:
+            if type(u_val1) is int or type(u_val1) is float:
+                vao.program['u_val1'] = u_val1
+            elif type(u_val1) is list or type(u_val1) is tuple:
+                vao.program['u_val1'] = u_val1
+
+        if u_val2 is not None and 'u_val2' in vao.program:
+            if type(u_val2) is int or type(u_val2) is float:
+                vao.program['u_val2'] = u_val2
+            elif type(u_val2) is list or type(u_val2) is tuple:
+                vao.program['u_val2'] = u_val2
+
+        if u_val3 is not None and 'u_val3' in vao.program:
+            if type(u_val3) is int or type(u_val3) is float:
+                vao.program['u_val3'] = u_val3
+            elif type(u_val3) is list or type(u_val3) is tuple:
+                vao.program['u_val3'] = u_val3
 
         images_out = []
         masks_out = []

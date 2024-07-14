@@ -19,10 +19,12 @@ backends = {
     "Darwin": "cgl",
 }
 
-fragment_shader="""#ifdef GL_ES
+VERSION = "#version 120\n"
+PRECISION = """#ifdef GL_ES
 precision mediump float;
-#endif
+#endif\n"""
 
+fragment_shader= PRECISION + """ 
 uniform vec2 u_resolution;
 varying vec2 v_texcoord;
 
@@ -70,10 +72,10 @@ class GlslViewer:
                 "u_tex3": ("IMAGE", { "multi": True }),
 
                 # TODO make this dynamic
-                "u_val0": ("FLOAT", { "multi": True }),
-                "u_val1": ("FLOAT", { "multi": True }),
-                "u_val2": ("FLOAT", { "multi": True }),
-                "u_val3": ("FLOAT", { "multi": True }),
+                "u_val0": ("*", { "multi": True, "default": None }),
+                "u_val1": ("*", { "multi": True, "default": None }),
+                "u_val2": ("*", { "multi": True, "default": None }),
+                "u_val3": ("*", { "multi": True, "default": None }),
 
                 # TODO: add support for vertex shader and 3D models
                 # "vertex_shader": ("STRING"),
@@ -134,13 +136,7 @@ class GlslViewer:
             else:
                 textures.append( ImageArrayTexture(u_tex3.numpy(), "u_tex3", defines) )
 
-        prog = ctx.program(vertex_shader="""
-            #version 100
-            
-            #ifdef GL_ES
-            precision mediump float;
-            #endif
-
+        prog = ctx.program(vertex_shader=VERSION + PRECISION + """
             attribute vec2 a_position;
             varying vec2 v_texcoord;
                            
@@ -149,7 +145,7 @@ class GlslViewer:
                 gl_Position = vec4(a_position, 0.0, 1.0);;
             }
             """,
-            fragment_shader= "#version 100\n" + 
+            fragment_shader= VERSION + 
                              stackDefines(defines) + 
                              "\n#line 1\n" +
                              fragment_code)
@@ -247,5 +243,5 @@ class GlslViewer:
 
         return (torch.cat(images_out, dim=0), torch.stack(masks_out, dim=0))
     
-    def IS_CHANGED(self, **kwargs):
-        return float("nan")
+    # def IS_CHANGED(self, **kwargs):
+    #     return float("nan")

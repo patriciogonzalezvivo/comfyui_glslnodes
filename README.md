@@ -19,8 +19,8 @@ Features:
 - [x] Add support for [LYGIA Shader Library](https://lygia.xyz/)
 - [ ] Add JS editor on the node client UI 
 - [x] Add support for multiple frames
-- [ ] Add support for multiple textures
-- [ ] Add support for multiple float uniforms
+- [x] Add support for multiple textures
+- [x] Add support for multiple float uniforms
 - [ ] Add support for multiple buffers (`#ifdef BUFFER_X`)
 - [ ] Add support for multiple double uniforms (`#ifdef DOUBLEBUFFER_X`)
 - [ ] Add support for multiple pyramids (`#ifdef PYRAMID_X`)

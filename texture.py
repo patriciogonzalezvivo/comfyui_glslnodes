@@ -28,8 +28,6 @@ class ImageTexture:
             if f"{self.name}Resolution" in program:
                 program[f"{self.name}Resolution"] = (float(self.width), float(self.height))
 
-        index += 1
-
 
 class ImageArrayTexture:
     def __init__(self, imageList, name = None, defines = None):
@@ -64,7 +62,7 @@ class ImageArrayTexture:
     def use(self, index, program = None):
         if program is not None:
             if self.name in program:
-                program[self.name] = range(index, index + self.totalFrames)
+                program[self.name]= index
 
             if f"{self.name}Resolution" in program:
                 program[f"{self.name}Resolution"] = (float(self.width), float(self.height))
@@ -74,5 +72,3 @@ class ImageArrayTexture:
 
         self.texture.use(location=index)
         self.sampler.use(location=index)
-
-        index += 1

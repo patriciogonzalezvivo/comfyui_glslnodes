@@ -32,3 +32,31 @@ def stackDefines(defines):
     for define in defines:
         out += f"#define {define[0]} {define[1]}\n"
     return out
+
+def getDefaultVertexShader(version):
+    out = "#version " + version + "\n"
+    if version == "100" or version == "120":
+        out += """
+#ifdef GL_ES
+precision highp float;
+#endif
+
+attribute vec2 a_position;
+varying vec2 v_texcoord;
+
+void main() {
+    v_texcoord = a_position * 0.5 + 0.5;
+    gl_Position = vec4(a_position, 0.0, 1.0);
+}
+"""
+    else:
+        out += """
+in vec2 a_position;
+out vec2 v_texcoord;
+
+void main() {
+    v_texcoord = a_position * 0.5 + 0.5;
+    gl_Position = vec4(a_position, 0.0, 1.0);
+}
+"""
+    return out

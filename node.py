@@ -11,7 +11,7 @@ import torch
 import comfy.utils
 
 from .texture import ImageTexture, ImageArrayTexture
-from .utils import resolveLygia, stackDefines
+from .utils import resolveLygia, stackDefines, getDefaultVertexShader
 
 backends = {
     "Linux": "egl",
@@ -19,20 +19,24 @@ backends = {
     "Darwin": "cgl",
 }
 
-VERSION = "#version 120\n"
-PRECISION = """#ifdef GL_ES
-precision mediump float;
-#endif\n"""
+VERSION = "#version 130\n"
 
-fragment_shader= PRECISION + """ 
-uniform vec2 u_resolution;
-varying vec2 v_texcoord;
+
+DEFAULT_FRAGMENT_SHADER= """out vec4 fragColor;
+
+uniform vec2    u_resolution;
+uniform float   u_time;
+uniform float   u_fps;
+uniform int     u_frame;
 
 void main() {
+    vec4 color = vec4(0.0, 0.0, 0.0, 1.0);
     vec2 pixel = 1.0 / u_resolution;
     vec2 st = gl_FragCoord.xy * pixel;
-    vec2 uv = v_texcoord;
-    gl_FragColor = vec4(uv, 0.0, 1.0);
+
+    color = vec4(uv, sin(u_time) * 0.5 + 0.5, 1.0);
+
+    fragColor = color;
 }
 """
 
@@ -41,16 +45,20 @@ class GlslEditor:
     def INPUT_TYPES(cls):
         return {
             "required": {
-                "glsl_code": ("STRING", {"multiline": True, "default": fragment_shader}),
+                "glsl_version" : (["100", "120", "130"], {"default": "130" }),
+                "glsl_code": ("STRING", {"multiline": True, "default": DEFAULT_FRAGMENT_SHADER}),
             },
         }
     CATEGORY = "GLSL"
     FUNCTION = "main"
     RETURN_TYPES = ("GLSL_CODE", )
 
-    def main(self, glsl_code):
-        out = resolveLygia(glsl_code)
-        return (out,)
+    def main(self, glsl_version, glsl_code):
+        out = {}
+        print("GLSL Version:", glsl_version)
+        out["version"] = glsl_version
+        out["src"] = resolveLygia(glsl_code)
+        return (out, )
 
 
 class GlslViewer:
@@ -136,19 +144,11 @@ class GlslViewer:
             else:
                 textures.append( ImageArrayTexture(u_tex3.numpy(), "u_tex3", defines) )
 
-        prog = ctx.program(vertex_shader=VERSION + PRECISION + """
-            attribute vec2 a_position;
-            varying vec2 v_texcoord;
-                           
-            void main() {
-                v_texcoord = a_position * 0.5 + 0.5;
-                gl_Position = vec4(a_position, 0.0, 1.0);;
-            }
-            """,
-            fragment_shader= VERSION + 
-                             stackDefines(defines) + 
-                             "\n#line 1\n" +
-                             fragment_code)
+        prog = ctx.program( vertex_shader= getDefaultVertexShader(fragment_code["version"]),
+                            fragment_shader= "#version " + fragment_code["version"] + "\n" + 
+                                            stackDefines(defines) + 
+                                            "\n#line 1\n" +
+                                            fragment_code["src"])
 
         # Create a simple billboard quad, where the first 4 floats is the postion followed by the texture coordinates
         vertices = np.array([
@@ -221,9 +221,8 @@ class GlslViewer:
                 vao.program['u_time'] = float(i / fps)
 
             # Bind Textures
-            texture_index = 0
             for i, texture in enumerate(textures):
-                texture.use(texture_index, vao.program)
+                texture.use(i, vao.program)
 
 
             ctx.clear(0.0, 0.0, 0.0, 0.0)

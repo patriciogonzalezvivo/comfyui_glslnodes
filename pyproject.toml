@@ -1,0 +1,15 @@
+[project]
+name = "comfyui_glslnodes"
+description = "A collections of nodes to support GLSL shaders inside a workflow."
+version = "1.0.0"
+license = "LICENSE"
+dependencies = ["moderngl", "numpy"]
+
+[project.urls]
+Repository = "https://github.com/patriciogonzalezvivo/comfyui_glslnodes"
+#  Used by Comfy Registry https://comfyregistry.org
+
+[tool.comfy]
+PublisherId = ""
+DisplayName = "comfyui_glslnodes"
+Icon = ""

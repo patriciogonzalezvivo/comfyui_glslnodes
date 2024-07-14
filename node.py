@@ -52,15 +52,71 @@ def resolveLygia(src: str):
 
 
 class ImageTexture:
-    def __init__(self, image):
+    def __init__(self, image, name = None):
         self.ctx = moderngl.get_context()
-        self.texture = self.ctx.texture(image.shape[1::-1], image.shape[2], image)
+        self.name = name
+
+        self.width = image.shape[1]
+        self.height = image.shape[0]
+        self.channels = image.shape[2]
+
+        image = np.flip(image, 0)
+        image = (image * 255).astype(np.uint8)
+        self.texture = self.ctx.texture(image.shape[1::-1], self.channels, image)
         self.sampler = self.ctx.sampler(texture=self.texture)
         self.sampler.filter = (self.ctx.NEAREST, self.ctx.NEAREST)
 
-    def use(self, index):
+    def use(self, index, program = None):
         self.texture.use(index)
         self.sampler.use(index)
+
+        if program is not None:
+            if self.name in program:
+                program[self.name] = index
+
+            if f"{self.name}Resolution" in program:
+                program[f"{self.name}Resolution"] = (float(self.width), float(self.height))
+
+
+class ImageArrayTexture:
+    def __init__(self, imageList, name = None):
+        self.ctx = moderngl.get_context()
+        self.name = name
+
+        self.width = imageList[0].shape[1]
+        self.height = imageList[0].shape[0]
+        self.channels = imageList[0].shape[2]
+        self.totalFrames = len(imageList)
+
+        dataList = []
+        for filename in imageList:
+            image = Image.open(filename)
+            if self.width != image.size[0] or self.height != image.size[1]:
+                raise ValueError(f"image size mismatch: {image.size[0]}x{image.size[1]}")
+            dataList.append(list(image.getdata()))
+
+        imageArrayData = np.array(dataList, np.uint8)
+
+        self.texture = self.ctx.texture_array((self.width, self.height, self.totalFrames), self.channels, imageArrayData)
+
+        self.sampler = self.ctx.sampler(texture=self.texture)
+        self.sampler.filter = (self.ctx.NEAREST, self.ctx.NEAREST)
+
+    def use(self, index, program = None):
+        self.texture.use(index)
+        self.sampler.use(index)
+
+        if program is not None:
+            if self.name in program:
+                program[self.name] = index
+
+            if f"{self.name}Resolution" in program:
+                program[f"{self.name}Resolution"] = (float(self.width), float(self.height))
+
+            if f"{self.name}TotalFrames" in program:
+                program[f"{self.name}TotalFrames"] = self.totalFrames
+
+
 
 
 class GlslEditor:
@@ -92,7 +148,10 @@ class GlslViewer:
                 "fps": ("INT", { "default": 30 }),
             },
             "optional": {
-                "u_tex": ("IMAGE", { "multi": True }),
+                "u_tex0": ("IMAGE", { "multi": True }),
+                "u_tex1": ("IMAGE", { "multi": True }),
+                "u_tex2": ("IMAGE", { "multi": True }),
+                "u_tex3": ("IMAGE", { "multi": True }),
 
                 # TODO: add support for vertex shader and 3D models
                 # "vertex_shader": ("STRING"),
@@ -105,7 +164,7 @@ class GlslViewer:
     RETURN_TYPES = ("IMAGE", "MASK")
     RETURN_NAMES = ("images", "mask")
 
-    def main(self, fragment_code, width, height, frames, fps, u_tex=None):
+    def main(self, fragment_code, width, height, frames, fps, u_tex0=None, u_tex1=None, u_tex2=None, u_tex3=None):
 
         ctx = moderngl.create_context(
             standalone=True,
@@ -162,17 +221,42 @@ class GlslViewer:
         if 'u_fps' in vao.program:
             vao.program['u_fps'] = fps
 
-        if u_tex is not None:
-            for i, image in enumerate(u_tex):
-                name = f"u_tex{i}"
-                if name in vao.program:
-                    # convert image from torch tensor to numpy array
-                    image = image.numpy()
-                    image = np.flip(image, 0)
-                    image = (image * 255).astype(np.uint8)
-                    texture = ImageTexture(image)
-                    texture.use(i)
-                    vao.program[name] = i
+        # TODO make this dynamic
+        if u_tex0 is not None:
+            if len(u_tex0) is 1:
+                # convert image from torch tensor to numpy array and then to a Texture
+                texture = ImageTexture(u_tex0.numpy()[0], "u_tex0")
+                texture.use(0, vao.program)
+            else:
+                texture = ImageArrayTexture(u_tex0, "u_tex0")
+                texture.use(0, vao.program)
+
+        if u_tex1 is not None:
+            if len(u_tex1) is 1:
+                # convert image from torch tensor to numpy array and then to a Texture
+                texture = ImageTexture(u_tex1.numpy()[0], "u_tex1")
+                texture.use(0, vao.program)
+            else:
+                texture = ImageArrayTexture(u_tex1, "u_tex1")
+                texture.use(0, vao.program)
+
+        if u_tex2 is not None:
+            if len(u_tex2) is 1:
+                # convert image from torch tensor to numpy array and then to a Texture
+                texture = ImageTexture(u_tex2.numpy()[0], "u_tex2")
+                texture.use(0, vao.program)
+            else:
+                texture = ImageArrayTexture(u_tex2, "u_tex2")
+                texture.use(0, vao.program)
+
+        if u_tex3 is not None:
+            if len(u_tex3) is 1:
+                # convert image from torch tensor to numpy array and then to a Texture
+                texture = ImageTexture(u_tex3.numpy()[0], "u_tex3")
+                texture.use(0, vao.program)
+            else:
+                texture = ImageArrayTexture(u_tex3, "u_tex3")
+                texture.use(0, vao.program)
 
         images_out = []
         masks_out = []

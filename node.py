@@ -1,6 +1,7 @@
 import moderngl
 import requests
 import re
+import platform
 
 import numpy as np
 import comfy.utils
@@ -9,6 +10,12 @@ from PIL import Image
 import torch
 
 import comfy.utils
+
+backends = {
+    "Linux": "egl",
+    "Windows": "wgl",
+    "Darwin": "cgl",
+}
 
 fragment_shader="""#ifdef GL_ES
 precision mediump float;
@@ -51,6 +58,14 @@ def resolveLygia(src: str):
     return source
 
 
+def stackDefines(defines):
+    out = ""
+    for define in defines:
+        out += f"#define {define[0]} {define[1]}\n"
+    print("defines:\n", out)
+    return out
+
+
 class ImageTexture:
     def __init__(self, image, name = None):
         self.ctx = moderngl.get_context()
@@ -77,9 +92,11 @@ class ImageTexture:
             if f"{self.name}Resolution" in program:
                 program[f"{self.name}Resolution"] = (float(self.width), float(self.height))
 
+        index += 1
+
 
 class ImageArrayTexture:
-    def __init__(self, imageList, name = None):
+    def __init__(self, imageList, name = None, defines = None):
         self.ctx = moderngl.get_context()
         self.name = name
 
@@ -88,27 +105,31 @@ class ImageArrayTexture:
         self.channels = imageList[0].shape[2]
         self.totalFrames = len(imageList)
 
+        if defines is not None:
+            defines.append((f"{name.upper()}_TOTALFRAMES", self.totalFrames))
+
         dataList = []
-        for filename in imageList:
-            image = Image.open(filename)
+        for image in imageList:
+            image = np.flip(image, 0)
+            image = Image.fromarray(np.uint8(image * 255))
             if self.width != image.size[0] or self.height != image.size[1]:
                 raise ValueError(f"image size mismatch: {image.size[0]}x{image.size[1]}")
             dataList.append(list(image.getdata()))
 
         imageArrayData = np.array(dataList, np.uint8)
 
-        self.texture = self.ctx.texture_array((self.width, self.height, self.totalFrames), self.channels, imageArrayData)
+        self.texture = self.ctx.texture_array((self.width, self.height, self.totalFrames), self.channels, data=imageArrayData)
+        # self.texture.build_mipmaps()
+        self.texture.filter = (self.ctx.LINEAR, self.ctx.LINEAR)
 
         self.sampler = self.ctx.sampler(texture=self.texture)
-        self.sampler.filter = (self.ctx.NEAREST, self.ctx.NEAREST)
+        self.sampler.filter = (self.ctx.LINEAR, self.ctx.LINEAR)
 
     def use(self, index, program = None):
-        self.texture.use(index)
-        self.sampler.use(index)
-
         if program is not None:
             if self.name in program:
-                program[self.name] = index
+                print("Setting", self.name, "to", index)
+                program[self.name] = range(index, index + self.totalFrames)
 
             if f"{self.name}Resolution" in program:
                 program[f"{self.name}Resolution"] = (float(self.width), float(self.height))
@@ -116,7 +137,10 @@ class ImageArrayTexture:
             if f"{self.name}TotalFrames" in program:
                 program[f"{self.name}TotalFrames"] = self.totalFrames
 
+        self.texture.use(location=index)
+        self.sampler.use(location=index)
 
+        index += 1
 
 
 class GlslEditor:
@@ -177,13 +201,48 @@ class GlslViewer:
              # TODO make this dynamic
              u_val0=None, u_val1=None, u_val2=None, u_val3=None):
 
-        ctx = moderngl.create_context(
-            standalone=True,
-            backend='egl',
-            # # These are OPTIONAL if you want to load a specific version
-            # libgl='libGL.so.1',
-            # libegl='libEGL.so.1',
-        )
+        ctx = None
+        backend_os = platform.system()
+        print("Backend OS:", backend_os)
+        if backend_os in backends:
+            ctx = moderngl.create_context(
+                standalone=True,
+                backend=backends[backend_os],
+            )
+        else:
+            ctx = moderngl.create_standalone_context()
+
+        defines = []
+        textures = []
+
+        # TODO make this dynamic
+        if u_tex0 is not None:
+            if len(u_tex0) is 1:
+                # convert image from torch tensor to numpy array and then to a Texture
+                textures.append( ImageTexture(u_tex0.numpy()[0], "u_tex0") )
+            else:
+                textures.append( ImageArrayTexture(u_tex0.numpy(), "u_tex0", defines) )
+
+        if u_tex1 is not None:
+            if len(u_tex1) is 1:
+                # convert image from torch tensor to numpy array and then to a Texture
+                textures.append( ImageTexture(u_tex1.numpy()[0], "u_tex1") )
+            else:
+                textures.append( ImageArrayTexture(u_tex1.numpy(), "u_tex1", defines) )
+
+        if u_tex2 is not None:
+            if len(u_tex2) is 1:
+                # convert image from torch tensor to numpy array and then to a Texture
+                textures.append( ImageTexture(u_tex2.numpy()[0], "u_tex2") )
+            else:
+                textures.append( ImageArrayTexture(u_tex2.numpy(), "u_tex2", defines) )
+
+        if u_tex3 is not None:
+            if len(u_tex3) is 1:
+                # convert image from torch tensor to numpy array and then to a Texture
+                textures.append( ImageTexture(u_tex3.numpy()[0], "u_tex3") )
+            else:
+                textures.append( ImageArrayTexture(u_tex3.numpy(), "u_tex3", defines) )
 
         prog = ctx.program(vertex_shader="""
             #version 100
@@ -200,7 +259,10 @@ class GlslViewer:
                 gl_Position = vec4(a_position, 0.0, 1.0);;
             }
             """,
-            fragment_shader= "#version 100\n" + fragment_code)
+            fragment_shader= "#version 100\n" + 
+                             stackDefines(defines) + 
+                             "\n#line 1\n" +
+                             fragment_code)
 
         # Create a simple billboard quad, where the first 4 floats is the postion followed by the texture coordinates
         vertices = np.array([
@@ -232,43 +294,7 @@ class GlslViewer:
         if 'u_fps' in vao.program:
             vao.program['u_fps'] = fps
 
-        # TODO make this dynamic
-        if u_tex0 is not None:
-            if len(u_tex0) is 1:
-                # convert image from torch tensor to numpy array and then to a Texture
-                texture = ImageTexture(u_tex0.numpy()[0], "u_tex0")
-                texture.use(0, vao.program)
-            else:
-                texture = ImageArrayTexture(u_tex0, "u_tex0")
-                texture.use(0, vao.program)
-
-        if u_tex1 is not None:
-            if len(u_tex1) is 1:
-                # convert image from torch tensor to numpy array and then to a Texture
-                texture = ImageTexture(u_tex1.numpy()[0], "u_tex1")
-                texture.use(0, vao.program)
-            else:
-                texture = ImageArrayTexture(u_tex1, "u_tex1")
-                texture.use(0, vao.program)
-
-        if u_tex2 is not None:
-            if len(u_tex2) is 1:
-                # convert image from torch tensor to numpy array and then to a Texture
-                texture = ImageTexture(u_tex2.numpy()[0], "u_tex2")
-                texture.use(0, vao.program)
-            else:
-                texture = ImageArrayTexture(u_tex2, "u_tex2")
-                texture.use(0, vao.program)
-
-        if u_tex3 is not None:
-            if len(u_tex3) is 1:
-                # convert image from torch tensor to numpy array and then to a Texture
-                texture = ImageTexture(u_tex3.numpy()[0], "u_tex3")
-                texture.use(0, vao.program)
-            else:
-                texture = ImageArrayTexture(u_tex3, "u_tex3")
-                texture.use(0, vao.program)
-
+        
         # TODO make this dynamic
         if u_val0 is not None and 'u_val0' in vao.program:
             if type(u_val0) is int or type(u_val0) is float:
@@ -303,10 +329,16 @@ class GlslViewer:
                 pbar.update_absolute(i + 1, frames)
 
             if 'u_frame' in vao.program:
-                vao.program['u_frame'] = i
+                vao.program['u_frame'] = int(i)
 
             if 'u_time' in vao.program:
-                vao.program['u_time'] = i / fps
+                vao.program['u_time'] = float(i / fps)
+
+            # Bind Textures
+            texture_index = 0
+            for i, texture in enumerate(textures):
+                texture.use(texture_index, vao.program)
+
 
             ctx.clear(0.0, 0.0, 0.0, 0.0)
             vao.render(mode=moderngl.TRIANGLES)

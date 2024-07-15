@@ -34,7 +34,7 @@ void main() {
     vec2 pixel = 1.0 / u_resolution;
     vec2 st = gl_FragCoord.xy * pixel;
 
-    color = vec4(uv, sin(u_time) * 0.5 + 0.5, 1.0);
+    color = vec4(st, sin(u_time) * 0.5 + 0.5, 1.0);
 
     fragColor = color;
 }

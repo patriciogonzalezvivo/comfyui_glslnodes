@@ -15,7 +15,6 @@ from .utils import resolveLygia, stackDefines, getDefaultVertexShader
 
 backends = {
     "Linux": "egl",
-    "Windows": "wgl",
     "Darwin": "cgl",
 }
 

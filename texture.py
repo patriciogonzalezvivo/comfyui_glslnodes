@@ -30,7 +30,7 @@ class ImageTexture:
 
 
 class ImageArrayTexture:
-    def __init__(self, imageList, name = None, defines = None):
+    def __init__(self, imageList, name = None):
         self.ctx = moderngl.get_context()
         self.name = name
 
@@ -38,9 +38,6 @@ class ImageArrayTexture:
         self.height = imageList[0].shape[0]
         self.channels = imageList[0].shape[2]
         self.totalFrames = len(imageList)
-
-        if defines is not None:
-            defines.append((f"{name.upper()}_TOTALFRAMES", self.totalFrames))
 
         dataList = []
         for image in imageList:

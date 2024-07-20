@@ -1,5 +1,5 @@
 import { app } from "../../../scripts/app.js";
-import { removeAllUniforms, addInput } from "./utils.js";
+import { removeAllUniforms, addInput, getMaxIndex } from "./utils.js";
 
 const ViewerId = "glslViewer";
 
@@ -48,24 +48,33 @@ app.registerExtension({
                     const fromNodeOutputType = fromNodeOutput.type;
                     
                     if (fromNodeOutputType === "IMAGE") {
-                        addInput(this, "u_tex", fromNodeOutputType);
+                        addInput(this, index, "u_tex", fromNodeOutputType);
                     }
                     else if (   fromNodeOutputType === "INT" || 
                                 fromNodeOutputType === "FLOAT" || 
                                 fromNodeOutputType === "VEC2" ||
                                 fromNodeOutputType === "VEC3" ||
                                 fromNodeOutputType === "VEC4" ) {
-                        addInput(this, "u_val", fromNodeOutputType);
+                        addInput(this, index, "u_val", fromNodeOutputType);
                     }
                 }
             }
             // If it's disconnecting
             else {
-                let totalInputs = this.inputs.length - 1;
-                console.log('totalInputs', totalInputs);
-                // If the last before "..."
-                if (index == totalInputs - 1) {
-                    this.removeInput(index);
+
+                if (ioSlot.name.startsWith("u_tex")) {
+                    let maxTexIndex = getMaxIndex(this, "u_tex");
+                    let maxTexName = "u_tex" + maxTexIndex;
+                    if (ioSlot.name === maxTexName) {
+                        this.removeInput(index);
+                    }
+                }
+                else if (ioSlot.name.startsWith("u_val")) {
+                    let maxValIndex = getMaxIndex(this, "u_val");
+                    let maxValName = "u_val" + maxValIndex;
+                    if (ioSlot.name === maxValName) {
+                        this.removeInput(index);
+                    }
                 }
             }
         }

@@ -106,6 +106,10 @@ class GlslViewer:
         images_out = []
         ptt = PILToTensor()
         pbar = comfy.utils.ProgressBar(frames)
+
+        # Bind Textures
+        useTextures(vao.program, textures)
+        
         for i in range(frames):
 
             # Update Progress Bar
@@ -118,9 +122,6 @@ class GlslViewer:
 
             # Set Uniforms
             useUniforms(vao.program, uniforms)
-
-            # Bind Textures
-            useTextures(vao.program, textures)
 
             # Render Call
             ctx.clear(0.0, 0.0, 0.0, 0.0)

@@ -139,6 +139,20 @@ BILLBOARD_GEOM = np.array([
 ], dtype='f4')
 
 
+def getIp():
+    import socket
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    s.settimeout(0)
+    try:
+        s.connect(('10.254.254.254', 1))
+        IP = s.getsockname()[0]
+    except Exception:
+        IP = '127.0.0.1'
+    finally:
+        s.close()
+    return IP
+
+
 def resolveLygia(src: str):
     source = ""
     lines = src.split("\n")
@@ -152,7 +166,7 @@ def resolveLygia(src: str):
                 url = url.replace("lygia", "https://lygia.xyz")
 
                 response = requests.get(url, headers={
-                    "Origin": "ComfyUI Server",
+                    "Origin": getIp() + ":8188",
                 })
                 if response.status_code == 200:
                     source += response.text + "\n"

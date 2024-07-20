@@ -5,8 +5,8 @@
 @description: A set of nodes to work with GLSL shaders
 """
 
-from .editors import GlslEditor, GlslShaderToy
-from .viewer import GlslViewer
+from .glsl_editors import GlslEditor, GlslShaderToy
+from .glsl_viewer import GlslViewer
 from .glsl_types import *
 
 from .install import *

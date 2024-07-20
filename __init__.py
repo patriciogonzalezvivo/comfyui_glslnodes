@@ -7,7 +7,7 @@
 
 from .editors import GlslEditor, GlslShaderToy
 from .viewer import GlslViewer
-from .types import *
+from .glsl_types import *
 
 from .install import *
 

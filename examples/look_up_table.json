@@ -1,0 +1,252 @@
+{
+  "last_node_id": 19,
+  "last_link_id": 22,
+  "nodes": [
+    {
+      "id": 11,
+      "type": "LoadImage",
+      "pos": [
+        60,
+        80
+      ],
+      "size": {
+        "0": 315,
+        "1": 314
+      },
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            19
+          ],
+          "shape": 3,
+          "slot_index": 0
+        },
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": null,
+          "shape": 3
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoadImage"
+      },
+      "widgets_values": [
+        "003.png",
+        "image"
+      ]
+    },
+    {
+      "id": 18,
+      "type": "LoadImage",
+      "pos": [
+        60,
+        440
+      ],
+      "size": {
+        "0": 323.20281982421875,
+        "1": 398.50103759765625
+      },
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            20
+          ],
+          "shape": 3,
+          "slot_index": 0
+        },
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": null,
+          "shape": 3
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoadImage"
+      },
+      "widgets_values": [
+        "square_01.png",
+        "image"
+      ]
+    },
+    {
+      "id": 19,
+      "type": "glslViewer",
+      "pos": [
+        1150,
+        100
+      ],
+      "size": {
+        "0": 210,
+        "1": 190
+      },
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "fragment_code",
+          "type": "GLSL_CODE",
+          "link": 22
+        },
+        {
+          "name": "u_tex0",
+          "type": "IMAGE",
+          "link": 19
+        },
+        {
+          "name": "u_tex1",
+          "type": "IMAGE",
+          "link": 20
+        },
+        {
+          "name": "...",
+          "type": "*",
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "links": [
+            21
+          ],
+          "shape": 3,
+          "slot_index": 0
+        },
+        {
+          "name": "mask",
+          "type": "MASK",
+          "links": null,
+          "shape": 3
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "glslViewer"
+      },
+      "widgets_values": [
+        768,
+        512,
+        1,
+        30
+      ]
+    },
+    {
+      "id": 17,
+      "type": "PreviewImage",
+      "pos": [
+        1150,
+        340
+      ],
+      "size": {
+        "0": 525.1028442382812,
+        "1": 376.1010437011719
+      },
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 21
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "PreviewImage"
+      }
+    },
+    {
+      "id": 15,
+      "type": "glslEditor",
+      "pos": [
+        430,
+        80
+      ],
+      "size": {
+        "0": 656.2028198242188,
+        "1": 501.90106201171875
+      },
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "GLSL_CODE",
+          "type": "GLSL_CODE",
+          "links": [
+            22
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "glslEditor"
+      },
+      "widgets_values": [
+        "130",
+        "uniform sampler2D u_tex0;\nuniform sampler2D u_tex1;\n\nuniform vec2    u_resolution;\nuniform float   u_time;\nuniform float   u_fps;\nuniform int     u_frame;\n\n#define LUT_SQUARE\n#include \"lygia/color/lut.glsl\"\n\nvoid main() {\n    vec4 color = vec4(0.0, 0.0, 0.0, 1.0);\n    vec2 pixel = 1.0 / u_resolution;\n    vec2 st = gl_FragCoord.xy * pixel;\n\n    color = texture2D(u_tex0, st);\n    color = lut(u_tex1, color);\n\n    gl_FragColor = color;\n}\n",
+        "fragment"
+      ]
+    }
+  ],
+  "links": [
+    [
+      19,
+      11,
+      0,
+      19,
+      1,
+      "*"
+    ],
+    [
+      20,
+      18,
+      0,
+      19,
+      2,
+      "*"
+    ],
+    [
+      21,
+      19,
+      0,
+      17,
+      0,
+      "IMAGE"
+    ],
+    [
+      22,
+      15,
+      0,
+      19,
+      0,
+      "GLSL_CODE"
+    ]
+  ],
+  "groups": [],
+  "config": {},
+  "extra": {
+    "ds": {
+      "scale": 1,
+      "offset": {
+        "0": 361.0971740722656,
+        "1": 86.24440626664591
+      }
+    }
+  },
+  "version": 0.4
+}

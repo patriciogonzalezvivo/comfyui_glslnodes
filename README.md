@@ -1,6 +1,6 @@
 # GLSL Nodes for ComfyUI
 
-[https://github.com/user-attachments/assets/8d4504f4-6631-4aa1-8844-8367b98f76fb](examples/shadertoy.json)
+https://github.com/user-attachments/assets/8d4504f4-6631-4aa1-8844-8367b98f76fb
 
 This nodes add support for GLSL shaders on workflows.
 

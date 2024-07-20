@@ -1,10 +1,8 @@
 # GLSL Nodes for ComfyUI
 
-![image](https://github.com/user-attachments/assets/388519ec-495b-4081-81e1-715c25588f1d)
-
+![examples/depth_of_field.json](https://github.com/user-attachments/assets/5ef20d7b-ac2a-4682-a052-ae8a52c9be84)
 
 https://github.com/user-attachments/assets/3e0f9dc7-1e30-4c55-95ce-45757596a977
-
 
 This nodes add support for GLSL shaders on workflows.
 

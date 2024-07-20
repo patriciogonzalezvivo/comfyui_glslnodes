@@ -1,0 +1,302 @@
+{
+  "last_node_id": 18,
+  "last_link_id": 21,
+  "nodes": [
+    {
+      "id": 13,
+      "type": "DownloadAndLoadDepthAnythingV2Model",
+      "pos": [
+        301,
+        255
+      ],
+      "size": {
+        "0": 391.70281982421875,
+        "1": 58
+      },
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "da_v2_model",
+          "type": "DAMODEL",
+          "links": [
+            12
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "DownloadAndLoadDepthAnythingV2Model"
+      },
+      "widgets_values": [
+        "depth_anything_v2_metric_hypersim_vitl_fp32.safetensors"
+      ]
+    },
+    {
+      "id": 15,
+      "type": "glslEditor",
+      "pos": [
+        306,
+        364
+      ],
+      "size": {
+        "0": 656.2028198242188,
+        "1": 501.90106201171875
+      },
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "GLSL_CODE",
+          "type": "GLSL_CODE",
+          "links": [
+            18
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "glslEditor"
+      },
+      "widgets_values": [
+        "130",
+        "uniform sampler2D u_tex0;\nuniform sampler2D u_tex1;\n\nuniform vec2    u_resolution;\nuniform float   u_time;\nuniform float   u_fps;\nuniform int     u_frame;\n\n#include \"lygia/color/contrast.glsl\"\n#include \"lygia/color/space/gamma2linear.glsl\"\n#include \"lygia/math/map.glsl\"\n\n#define RESOLUTION u_resolution\n\n// #define BOKEH_DEBUG\n#define SAMPLEDOF_BLUR_SIZE 12.0\n#define SAMPLEDOF_RAD_SCALE 2.0\n#define SAMPLEDOF_DEPTH_SAMPLE_FNC(TEX, UV) (gamma2linear( 1.0-SAMPLER_FNC(TEX,UV).r ))\n#include \"lygia/sample/dof.glsl\"\n\nvoid main() {\n    vec4 color = vec4(0.0, 0.0, 0.0, 1.0);\n    vec2 pixel = 1.0 / u_resolution;\n    vec2 st = gl_FragCoord.xy * pixel;\n\n    vec2 focus_point = vec2(0.5, 0.7);\n    float fp = SAMPLEDOF_DEPTH_SAMPLE_FNC(u_tex1, focus_point);\n    color.rgb = sampleDoF(u_tex0, u_tex1, st, fp, 0.2);\n\n    gl_FragColor = color;\n}\n"
+      ]
+    },
+    {
+      "id": 11,
+      "type": "LoadImage",
+      "pos": [
+        -61,
+        192
+      ],
+      "size": {
+        "0": 315,
+        "1": 314
+      },
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            10,
+            19
+          ],
+          "shape": 3,
+          "slot_index": 0
+        },
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": null,
+          "shape": 3
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoadImage"
+      },
+      "widgets_values": [
+        "003.png",
+        "image"
+      ]
+    },
+    {
+      "id": 12,
+      "type": "DepthAnything_V2",
+      "pos": [
+        749,
+        257
+      ],
+      "size": {
+        "0": 210,
+        "1": 46
+      },
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "da_model",
+          "type": "DAMODEL",
+          "link": 12
+        },
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 10
+        }
+      ],
+      "outputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "links": [
+            20
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "DepthAnything_V2"
+      }
+    },
+    {
+      "id": 17,
+      "type": "PreviewImage",
+      "pos": [
+        1019,
+        507
+      ],
+      "size": {
+        "0": 470.1028137207031,
+        "1": 345.7010498046875
+      },
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 21
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "PreviewImage"
+      }
+    },
+    {
+      "id": 18,
+      "type": "glslViewer",
+      "pos": [
+        1025,
+        171
+      ],
+      "size": {
+        "0": 210,
+        "1": 190
+      },
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "fragment_code",
+          "type": "GLSL_CODE",
+          "link": 18
+        },
+        {
+          "name": "u_tex0",
+          "type": "IMAGE",
+          "link": 19
+        },
+        {
+          "name": "u_tex1",
+          "type": "IMAGE",
+          "link": 20
+        },
+        {
+          "name": "...",
+          "type": "*",
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "links": [
+            21
+          ],
+          "shape": 3,
+          "slot_index": 0
+        },
+        {
+          "name": "mask",
+          "type": "MASK",
+          "links": null,
+          "shape": 3
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "glslViewer"
+      },
+      "widgets_values": [
+        512,
+        512,
+        1,
+        30
+      ]
+    }
+  ],
+  "links": [
+    [
+      10,
+      11,
+      0,
+      12,
+      1,
+      "IMAGE"
+    ],
+    [
+      12,
+      13,
+      0,
+      12,
+      0,
+      "DAMODEL"
+    ],
+    [
+      18,
+      15,
+      0,
+      18,
+      0,
+      "GLSL_CODE"
+    ],
+    [
+      19,
+      11,
+      0,
+      18,
+      1,
+      "*"
+    ],
+    [
+      20,
+      12,
+      0,
+      18,
+      2,
+      "*"
+    ],
+    [
+      21,
+      18,
+      0,
+      17,
+      0,
+      "IMAGE"
+    ]
+  ],
+  "groups": [],
+  "config": {},
+  "extra": {
+    "ds": {
+      "scale": 0.9090909090909091,
+      "offset": {
+        "0": 191.69717407226562,
+        "1": -28.801048278808594
+      }
+    }
+  },
+  "version": 0.4
+}

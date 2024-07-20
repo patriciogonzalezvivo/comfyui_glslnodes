@@ -1,10 +1,12 @@
 # GLSL Nodes for ComfyUI
 
+This nodes add support for GLSL shaders on workflows, by adding the following nodes: glslEditor, glslViewer, int, float, vec2, vec3, vec4.
+
+Here some examples:
+
 ![examples/depth_of_field.json](https://github.com/user-attachments/assets/5ef20d7b-ac2a-4682-a052-ae8a52c9be84)
 
 https://github.com/user-attachments/assets/3e0f9dc7-1e30-4c55-95ce-45757596a977
-
-This nodes add support for GLSL shaders on workflows.
 
 Features:
 

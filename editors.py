@@ -6,17 +6,18 @@ class GlslShaderToy:
     def INPUT_TYPES(cls):
         return {
             "required": {
-                "glsl_code": ("STRING", {"multiline": True, "default": DEFAULT_SHADERTOY_SHADER}),
+                "code": ("STRING", {"multiline": True, "default": DEFAULT_SHADERTOY_SHADER}),
             },
         }
     CATEGORY = "GLSL"
     FUNCTION = "main"
     RETURN_TYPES = ("GLSL_CODE", )
 
-    def main(self, glsl_code):
+    def main(self, code):
         out = {}
         out["version"] = "440"
-        out["src"] = resolveLygia(glsl_code)
+        out["type"] = "fragment"
+        out["src"] = resolveLygia(code)
         out["specs"] = "shadertoy"
         return (out, )
 
@@ -26,17 +27,19 @@ class GlslEditor:
     def INPUT_TYPES(cls):
         return {
             "required": {
-                "glsl_version" : (GLSL_VERSIONS, {"default": "130" }),
-                "glsl_code": ("STRING", {"multiline": True, "default": DEFAULT_FRAGMENT_SHADER}),
+                "version" : (GLSL_VERSIONS, {"default": "130" }),
+                "code": ("STRING", {"multiline": True, "default": DEFAULT_FRAGMENT_SHADER}),
+                "type": (["fragment"], { "default": "fragment" }),
             },
         }
     CATEGORY = "GLSL"
     FUNCTION = "main"
     RETURN_TYPES = ("GLSL_CODE", )
 
-    def main(self, glsl_version, glsl_code):
+    def main(self, version, type, code):
         out = {}
-        out["version"] = glsl_version
-        out["src"] = resolveLygia(glsl_code)
+        out["version"] = version
+        out["type"] = type
+        out["src"] = resolveLygia(code)
         out["specs"] = "raw"
         return (out, )

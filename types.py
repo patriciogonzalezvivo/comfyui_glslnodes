@@ -22,7 +22,7 @@ class GlslFloat:
     def INPUT_TYPES(cls):
         return {
             "required": {
-                "value": ("FLOAT", { "default": 0.0, "min": 0.0, "max": 1.0, "step": 0.001 }),
+                "value": ("FLOAT", { "default": 0.0, "step": 0.01 }),
             }
         }
     
@@ -41,8 +41,8 @@ class GlslVec2:
     def INPUT_TYPES(cls):
         return {
             "required": {
-                "x": ("FLOAT", { "default": 0.0, "min": 0.0, "max": 1.0, "step": 0.001 }),
-                "y": ("FLOAT", { "default": 0.0, "min": 0.0, "max": 1.0, "step": 0.001 }),
+                "x": ("FLOAT", { "default": 0.0, "step": 0.01 }),
+                "y": ("FLOAT", { "default": 0.0, "step": 0.01 }),
             }
         }
     
@@ -61,9 +61,9 @@ class GlslVec3:
     def INPUT_TYPES(cls):
         return {
             "required": {
-                "x": ("FLOAT", { "default": 0.0, "min": 0.0, "max": 1.0, "step": 0.001 }),
-                "y": ("FLOAT", { "default": 0.0, "min": 0.0, "max": 1.0, "step": 0.001 }),
-                "z": ("FLOAT", { "default": 0.0, "min": 0.0, "max": 1.0, "step": 0.001 }),
+                "x": ("FLOAT", { "default": 0.0, "step": 0.01 }),
+                "y": ("FLOAT", { "default": 0.0, "step": 0.01 }),
+                "z": ("FLOAT", { "default": 0.0, "step": 0.01 }),
             }
         }
     
@@ -82,10 +82,10 @@ class GlslVec4:
     def INPUT_TYPES(cls):
         return {
             "required": {
-                "x": ("FLOAT", { "default": 0.0, "min": 0.0, "max": 1.0, "step": 0.001 }),
-                "y": ("FLOAT", { "default": 0.0, "min": 0.0, "max": 1.0, "step": 0.001 }),
-                "z": ("FLOAT", { "default": 0.0, "min": 0.0, "max": 1.0, "step": 0.001 }),
-                "w": ("FLOAT", { "default": 0.0, "min": 0.0, "max": 1.0, "step": 0.001 }),
+                "x": ("FLOAT", { "default": 0.0, "step": 0.01 }),
+                "y": ("FLOAT", { "default": 0.0, "step": 0.01 }),
+                "z": ("FLOAT", { "default": 0.0, "step": 0.01 }),
+                "w": ("FLOAT", { "default": 0.0, "step": 0.01 }),
             }
         }
     

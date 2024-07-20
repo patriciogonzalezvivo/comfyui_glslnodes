@@ -1,0 +1,366 @@
+{
+  "last_node_id": 25,
+  "last_link_id": 29,
+  "nodes": [
+    {
+      "id": 21,
+      "type": "VHS_VideoCombine",
+      "pos": [
+        1310,
+        110
+      ],
+      "size": [
+        320,
+        552
+      ],
+      "flags": {},
+      "order": 6,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 29
+        },
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "link": null
+        },
+        {
+          "name": "meta_batch",
+          "type": "VHS_BatchManager",
+          "link": null
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Filenames",
+          "type": "VHS_FILENAMES",
+          "links": null,
+          "shape": 3
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VHS_VideoCombine"
+      },
+      "widgets_values": {
+        "frame_rate": 24,
+        "loop_count": 0,
+        "filename_prefix": "AnimateDiff",
+        "format": "image/gif",
+        "pingpong": false,
+        "save_output": true,
+        "videopreview": {
+          "hidden": false,
+          "paused": false,
+          "params": {
+            "filename": "AnimateDiff_00073.gif",
+            "subfolder": "",
+            "type": "output",
+            "format": "image/gif",
+            "frame_rate": 24
+          }
+        }
+      }
+    },
+    {
+      "id": 23,
+      "type": "PreviewImage",
+      "pos": [
+        990,
+        600
+      ],
+      "size": {
+        "0": 210,
+        "1": 246
+      },
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 28
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "PreviewImage"
+      }
+    },
+    {
+      "id": 15,
+      "type": "glslEditor",
+      "pos": [
+        23,
+        96
+      ],
+      "size": {
+        "0": 575.1028442382812,
+        "1": 448.7010498046875
+      },
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "GLSL_CODE",
+          "type": "GLSL_CODE",
+          "links": [
+            25
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "glslEditor"
+      },
+      "widgets_values": [
+        "130",
+        "// Here you create a simple animation\n\nuniform sampler2D u_tex0;\n\nuniform vec2    u_resolution;\nuniform float   u_time;\nuniform float   u_fps;\nuniform int     u_frame;\n\n#include \"lygia/draw/fill.glsl\"\n#include \"lygia/space/ratio.glsl\"\n#include \"lygia/space/rotate.glsl\"\n#include \"lygia/sdf/starSDF.glsl\"\n\nvoid main() {\n    vec4 color = vec4(0.0, 0.0, 0.0, 1.0);\n    vec2 pixel = 1.0 / u_resolution;\n    vec2 st = gl_FragCoord.xy * pixel;\n\n    st = ratio(st, u_resolution.xy);\n    st = rotate(st, u_time * 0.4);\n    float sdf = starSDF(st, 5);\n    color.rgb += fill(sdf, 0.5);\n\n    gl_FragColor = color;\n}\n",
+        "fragment"
+      ]
+    },
+    {
+      "id": 22,
+      "type": "PreviewImage",
+      "pos": [
+        380,
+        600
+      ],
+      "size": {
+        "0": 210,
+        "1": 246
+      },
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 24
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "PreviewImage"
+      }
+    },
+    {
+      "id": 19,
+      "type": "glslEditor",
+      "pos": [
+        637,
+        103
+      ],
+      "size": {
+        "0": 575.3028564453125,
+        "1": 437.40106201171875
+      },
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "GLSL_CODE",
+          "type": "GLSL_CODE",
+          "links": [
+            26
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "glslEditor"
+      },
+      "widgets_values": [
+        "130",
+        "// Here you sample it as an image sequence\n\nuniform sampler2DArray u_tex0;\nuniform float u_tex0TotalFrames;\n\nuniform vec2    u_resolution;\nuniform float   u_time;\nuniform float   u_fps;\nuniform int     u_frame;\n\nvoid main() {\n    vec4 color = vec4(0.0, 0.0, 0.0, 1.0);\n    vec2 pixel = 1.0 / u_resolution;\n    vec2 st = gl_FragCoord.xy * pixel;\n\n    float frame = u_frame;\n    float total = u_tex0TotalFrames;\n\n    color.r = texture(u_tex0, vec3(st, mod(u_frame, total) )).r;\n    color.g = texture(u_tex0, vec3(st, mod(u_frame+2, total) )).r;\n    color.b = texture(u_tex0, vec3(st, mod(u_frame+4, total) )).r;\n\n    color.rgb = mix(vec3(1.0-distance(st, vec2(0.5))), vec3(0.0), color.rgb);\n\n    gl_FragColor = color;\n}\n",
+        "fragment"
+      ]
+    },
+    {
+      "id": 24,
+      "type": "glslViewer",
+      "pos": [
+        31,
+        601
+      ],
+      "size": {
+        "0": 210,
+        "1": 150
+      },
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "fragment_code",
+          "type": "GLSL_CODE",
+          "link": 25
+        },
+        {
+          "name": "...",
+          "type": "*",
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "links": [
+            24,
+            27
+          ],
+          "shape": 3,
+          "slot_index": 0
+        },
+        {
+          "name": "mask",
+          "type": "MASK",
+          "links": null,
+          "shape": 3
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "glslViewer"
+      },
+      "widgets_values": [
+        512,
+        512,
+        96,
+        24
+      ]
+    },
+    {
+      "id": 25,
+      "type": "glslViewer",
+      "pos": [
+        647,
+        597
+      ],
+      "size": {
+        "0": 210,
+        "1": 170
+      },
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "fragment_code",
+          "type": "GLSL_CODE",
+          "link": 26
+        },
+        {
+          "name": "u_tex0",
+          "type": "IMAGE",
+          "link": 27
+        },
+        {
+          "name": "...",
+          "type": "*",
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "links": [
+            28,
+            29
+          ],
+          "shape": 3,
+          "slot_index": 0
+        },
+        {
+          "name": "mask",
+          "type": "MASK",
+          "links": null,
+          "shape": 3
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "glslViewer"
+      },
+      "widgets_values": [
+        512,
+        512,
+        96,
+        24
+      ]
+    }
+  ],
+  "links": [
+    [
+      24,
+      24,
+      0,
+      22,
+      0,
+      "IMAGE"
+    ],
+    [
+      25,
+      15,
+      0,
+      24,
+      0,
+      "GLSL_CODE"
+    ],
+    [
+      26,
+      19,
+      0,
+      25,
+      0,
+      "GLSL_CODE"
+    ],
+    [
+      27,
+      24,
+      0,
+      25,
+      1,
+      "*"
+    ],
+    [
+      28,
+      25,
+      0,
+      23,
+      0,
+      "IMAGE"
+    ],
+    [
+      29,
+      25,
+      0,
+      21,
+      0,
+      "IMAGE"
+    ]
+  ],
+  "groups": [],
+  "config": {},
+  "extra": {
+    "ds": {
+      "scale": 1.4641000000000013,
+      "offset": {
+        "0": 2.3290786253592435,
+        "1": -7.471554496370767
+      }
+    }
+  },
+  "version": 0.4
+}

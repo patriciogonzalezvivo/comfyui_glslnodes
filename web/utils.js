@@ -19,8 +19,10 @@ export const removeLastUniform = (node) => {
 
 export const removeAllUniforms = (node) => {
     let totalInputs = node.inputs.length - 1;
-    for (let i = 0; i < totalInputs; i++){
-        removeLastUniform(node);
+    for (let i = totalInputs; i >= 0; i--) {
+        if (node.inputs[i].name.startsWith("u_")) {
+            node.removeInput(i);
+        }
     }
 }
 
@@ -36,9 +38,12 @@ export const getMaxIndex = (node, str) => {
 
 export const getNextName = (node, str) => { return str + (getMaxIndex(node, str) + 1); }
 
-export const addInput = (node, index, str, type) => {
-    let name = getNextName(node, str);
+export const addInput = (node, index, str, type, unique=true) => {
+    let name = str;
 
+    if (unique) 
+        name = getNextName(node, str);
+    
     node.graph.beforeChange();
     
     node.inputs[index].name = name;

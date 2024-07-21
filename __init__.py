@@ -6,6 +6,7 @@
 """
 
 from .glsl_editors import GlslEditor, GlslShaderToy
+from .glsl_uniforms import GlslUniforms
 from .glsl_viewer import GlslViewer
 from .glsl_types import *
 
@@ -17,6 +18,7 @@ NODE_CLASS_MAPPINGS = {
     'vec2': GlslVec2,
     'vec3': GlslVec3,
     'vec4': GlslVec4,
+    'glslUniforms': GlslUniforms,
     'glslViewer': GlslViewer,
     'glslEditor': GlslEditor,
     'glslEditor (ShaderToy)': GlslShaderToy,

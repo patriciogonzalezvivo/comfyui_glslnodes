@@ -1,4 +1,4 @@
-from .utils import resolveLygia, GLSL_VERSIONS, DEFAULT_FRAGMENT_SHADER, DEFAULT_SHADERTOY_SHADER
+from .glsl_utils import resolveLygia, GLSL_VERSIONS, DEFAULT_FRAGMENT_SHADER, DEFAULT_SHADERTOY_SHADER
 
 
 class GlslShaderToy:

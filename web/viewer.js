@@ -2,11 +2,12 @@ import { app } from "../../../scripts/app.js";
 import { removeAllUniforms, addInput, getMaxIndex } from "./utils.js";
 
 const ViewerId = "glslViewer";
+const UniformsId = "glslUniforms";
 
 app.registerExtension({
-    name: "glslnodes." + ViewerId,
+    name: "glslnodes.DynamicUniforms",
     async beforeRegisterNodeDef(nodeType, nodeData, app) {
-        if (nodeData.name !== ViewerId) {
+        if (nodeData.name !== ViewerId && nodeData.name !== UniformsId) {
             return;
         }
 
@@ -40,29 +41,40 @@ app.registerExtension({
             // If it's connecting
             if (connected) {
                 // to the last input "..."
-                 if (ioSlot.name === "..."){
+                 if (ioSlot.name === "...") {
 
                     // Change the type and name based on the connection Type
                     const fromNode = app.graph.getNodeById(link_info.origin_id)
                     const fromNodeOutput = fromNode.outputs[link_info.origin_slot];
                     const fromNodeOutputType = fromNodeOutput.type;
-                    
-                    if (fromNodeOutputType === "IMAGE") {
-                        addInput(this, index, "u_tex", fromNodeOutputType);
+
+                    if (fromNodeOutputType === "GLSL_CONTEXT") {
+                        let isUniformsAlreadyConnected = false;
+                        for (let i = 0; i < this.inputs.length; i++)
+                            if (this.inputs[i].name === "uniforms")
+                                isUniformsAlreadyConnected = true;
+
+                        if (!isUniformsAlreadyConnected) 
+                            addInput(this, index, "uniforms", fromNodeOutputType, false);
                     }
+                    else if (fromNodeOutputType === "IMAGE")
+                        addInput(this, index, "u_tex", fromNodeOutputType);
+        
                     else if (   fromNodeOutputType === "INT" || 
                                 fromNodeOutputType === "FLOAT" || 
                                 fromNodeOutputType === "VEC2" ||
                                 fromNodeOutputType === "VEC3" ||
-                                fromNodeOutputType === "VEC4" ) {
+                                fromNodeOutputType === "VEC4" )
                         addInput(this, index, "u_val", fromNodeOutputType);
-                    }
+    
                 }
             }
             // If it's disconnecting
             else {
-
-                if (ioSlot.name.startsWith("u_tex")) {
+                if (ioSlot.name.startsWith("uniforms")) {
+                    this.removeInput(index);
+                }
+                else if (ioSlot.name.startsWith("u_tex")) {
                     let maxTexIndex = getMaxIndex(this, "u_tex");
                     let maxTexName = "u_tex" + maxTexIndex;
                     if (ioSlot.name === maxTexName) {

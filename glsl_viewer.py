@@ -10,9 +10,7 @@ from torchvision.transforms import PILToTensor
 import torch
 import comfy.utils
 
-from .utils import setProgram, loadTextures, useTextures, loadUniforms, useUniforms, getBillboard
-from .utils import GL_BACKENDS, GL_PLATFORMS
-
+from .glsl_context import Context
 
 class GlslViewer:
     @classmethod
@@ -51,55 +49,44 @@ class GlslViewer:
     def main(self, fragment_code, width, height, frames, fps, **kwargs):
         print("Optional Inputs", kwargs.keys())
 
+        context = None
+        geometry = None
+        vertex_code = None
         images_in = {}
         values_in = {}
+
         for key, value in kwargs.items():
-            if key.startswith("u_tex"):
+            if key.startswith("uniforms"):
+                context = value
+            elif key.startswith("u_tex"):
                 images_in[key] = value
             elif key.startswith("u_val"):
                 values_in[key] = value
 
-        backend_os = platform.system()
+        if context is None:
+            context = Context()
 
-        ctx = None
-        if backend_os in GL_BACKENDS:
-            ctx = moderngl.create_context(
-                standalone=True,
-                backend=GL_BACKENDS[backend_os],
-            )
-        else:
-            ctx = moderngl.create_standalone_context()
+        context.loadTextures(images_in)
+        context.loadUniforms(values_in)
 
-        # Set Defines
-        defines = []
-        if backend_os in GL_PLATFORMS:
-            defines.append((GL_PLATFORMS[backend_os], ""))
-
-        # load basic Uniforms
-        uniforms = {
-            "u_date": (float(date.today().year), float(date.today().month), float(date.today().day), (date.today() - date.today()).total_seconds()),
-            "u_resolution": (float(width), float(height)),
-            "u_time": 0.0,
-            "u_delta": 1.0 / fps,
-            "u_fps": fps,
-            "u_frame": 0,
-        }
-
-        # load Textures & Uniforms
-        textures = loadTextures(images=images_in, uniforms=uniforms, defines=defines)
-        uniforms = loadUniforms(values=values_in, uniforms=uniforms, defines=defines)
-
+        context.setUniform("u_date", (float(date.today().year), float(date.today().month), float(date.today().day), (date.today() - date.today()).total_seconds()))
+        context.setUniform("u_resolution", (float(width), float(height)) )
+        context.setUniform("u_time", 0.0)
+        context.setUniform("u_delta", 1.0 / fps)
+        context.setUniform("u_fps", fps)
+        context.setUniform("u_frame", 0)
+        
         # Create Shader Program
-        prog = setProgram(ctx, defines, fragment_code);
+        prog = context.makeProgram(fragment_code, vertex_code=vertex_code, geometry=geometry)
 
         # Create a simple billboard 
-        vao = getBillboard(ctx, prog)
+        vao = context.makeBillboard(prog)
 
         # TODO: make sure this is the best way to get aMSA buffer
-        fboaa = ctx.simple_framebuffer((width, height), components=4, samples=8)
+        fboaa = context.ctx.simple_framebuffer((width, height), components=4, samples=8)
         fboaa.use()
         # fbo = ctx.framebuffer(color_attachments=[ctx.texture((width, height), 4)])
-        fbo = ctx.simple_framebuffer((width, height), components=4)
+        fbo = context.ctx.simple_framebuffer((width, height), components=4)
 
         # Render Loop
         masks_out = []
@@ -108,7 +95,7 @@ class GlslViewer:
         pbar = comfy.utils.ProgressBar(frames)
 
         # Bind Textures
-        useTextures(vao.program, textures)
+        context.useTextures(vao.program)
         
         for i in range(frames):
 
@@ -117,18 +104,18 @@ class GlslViewer:
                 pbar.update_absolute(i + 1, frames)
 
             # Update dynamic uniforms
-            uniforms['u_frame'] = int(i)
-            uniforms['u_time'] = float(i / fps)
+            context.uniforms['u_frame'] = int(i)
+            context.uniforms['u_time'] = float(i / fps)
 
             # Set Uniforms
-            useUniforms(vao.program, uniforms)
+            context.useUniforms(vao.program)
 
             # Render Call
-            ctx.clear(0.0, 0.0, 0.0, 0.0)
+            context.ctx.clear(0.0, 0.0, 0.0, 0.0)
             vao.render(mode=moderngl.TRIANGLES)
 
             # Copy Framebuffer to MSA
-            ctx.copy_framebuffer(dst=fbo, src=fboaa)
+            context.ctx.copy_framebuffer(dst=fbo, src=fboaa)
             data = fbo.read(components=4)
 
             # Extract Image

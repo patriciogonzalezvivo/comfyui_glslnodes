@@ -1,10 +1,6 @@
 import requests
 import re
 
-from .texture import ImageTexture, ImageArrayTexture
-
-import numpy as np
-
 GL_BACKENDS = {
     "Linux": "egl",
     "Darwin": "cgl",
@@ -127,18 +123,6 @@ DEFAULT_SHADERTOY_SHADER = """void mainImage( out vec4 fragColor, in vec2 fragCo
 }
 """
 
-BILLBOARD_GEOM = np.array([
-    # First triangle
-    -1.0, -1.0, 
-    -1.0,  1.0,
-        1.0,  1.0,
-    # Second triangle
-    -1.0, -1.0,
-        1.0,  1.0,
-        1.0, -1.0,
-], dtype='f4')
-
-
 def getIp():
     import socket
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -179,9 +163,7 @@ def resolveLygia(src: str):
     return source
 
 
-def getBillboard(ctx, program):
-    vbo = ctx.buffer(BILLBOARD_GEOM)
-    return ctx.simple_vertex_array(program, vbo, 'a_position')
+
 
 
 def getDefaultVertexShader(version):
@@ -228,52 +210,6 @@ def getFragmentShader(fragment_code, defines):
     return out
 
 
-def setProgram(ctx, defines, fragment_code, vertex_code=None, geometry=None):
-    return ctx.program( vertex_shader= getDefaultVertexShader(fragment_code["version"]),
-                        fragment_shader= getFragmentShader(fragment_code, defines) )
 
-
-def loadTextures(images, uniforms, defines):
-    textures = []
-    for key, value in images.items():
-        if value is not None:
-            if len(value) is 1:
-                tex = ImageTexture(value.numpy()[0], key)
-                textures.append( tex )
-                uniforms[f"{key}Resolution"] = (float(tex.width), float(tex.height))
-                defines.append((f"{key.upper()}_TYPE", "sampler2D"))
-            else:
-                tex = ImageArrayTexture(value.numpy(), key)
-                textures.append( tex )
-                uniforms[f"{key}Resolution"] = (float(tex.width), float(tex.height))
-                uniforms[f"{key}TotalFrames"] = float(tex.totalFrames)
-                defines.append((f"{key.upper()}_TOTALFRAMES", float(tex.totalFrames)))
-                defines.append((f"{key.upper()}_TYPE", "sampler2DArray"))
-    return textures
-
-
-def useTextures(program, textures):
-    for i, texture in enumerate(textures):
-        texture.use(i, program)
-    return textures
-
-
-def loadUniforms(values, uniforms, defines):
-    for key, value in values.items():
-        if value is not None:
-            if type(value) is int or type(value) is float:
-                uniforms[key] = value
-                defines.append((f"{key.upper()}_TYPE", "float"))
-            elif type(value) is list or type(value) is tuple:
-                uniforms[key] = value
-                defines.append((f"{key.upper()}_TYPE", "vec" + str(len(value))))
-    return uniforms
-
-
-def useUniforms(program, uniforms):
-    for key, value in uniforms.items():
-        if key in program:
-            if value is not None:
-                program[key] = value
 
 

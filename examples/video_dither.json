@@ -1,49 +1,36 @@
 {
-  "last_node_id": 27,
-  "last_link_id": 51,
+  "last_node_id": 35,
+  "last_link_id": 74,
   "nodes": [
     {
-      "id": 25,
+      "id": 32,
       "type": "glslViewer",
       "pos": [
-        1103,
-        120
+        1110,
+        50
       ],
-      "size": [
-        210,
-        170
-      ],
+      "size": {
+        "0": 210,
+        "1": 158
+      },
       "flags": {},
-      "order": 3,
+      "order": 4,
       "mode": 0,
       "inputs": [
         {
           "name": "fragment_code",
           "type": "GLSL_CODE",
-          "link": 44
+          "link": 61
         },
         {
-          "name": "u_tex0",
-          "type": "IMAGE",
-          "link": 45
-        },
-        {
-          "name": "...",
-          "type": "*",
-          "link": null
-        },
-        {
-          "name": "frames",
-          "type": "INT",
-          "link": 51,
-          "widget": {
-            "name": "frames"
-          }
+          "name": "uniforms",
+          "type": "GLSL_CONTEXT",
+          "link": 73
         },
         {
           "name": "width",
           "type": "INT",
-          "link": 49,
+          "link": 58,
           "widget": {
             "name": "width"
           }
@@ -51,10 +38,23 @@
         {
           "name": "height",
           "type": "INT",
-          "link": 50,
+          "link": 59,
           "widget": {
             "name": "height"
           }
+        },
+        {
+          "name": "frames",
+          "type": "INT",
+          "link": 57,
+          "widget": {
+            "name": "frames"
+          }
+        },
+        {
+          "name": "...",
+          "type": "*",
+          "link": null
         }
       ],
       "outputs": [
@@ -62,7 +62,7 @@
           "name": "images",
           "type": "IMAGE",
           "links": [
-            47
+            60
           ],
           "shape": 3,
           "slot_index": 0
@@ -78,18 +78,18 @@
         "Node name for S&R": "glslViewer"
       },
       "widgets_values": [
-        768,
+        512,
         512,
         1,
-        24
+        30
       ]
     },
     {
       "id": 10,
       "type": "VHS_LoadVideo",
       "pos": [
-        121,
-        138
+        40,
+        240
       ],
       "size": [
         235.1999969482422,
@@ -115,7 +115,7 @@
           "name": "IMAGE",
           "type": "IMAGE",
           "links": [
-            45
+            74
           ],
           "shape": 3,
           "slot_index": 0
@@ -175,15 +175,15 @@
       "id": 27,
       "type": "VHS_VideoInfo",
       "pos": [
-        494,
-        666
+        319,
+        70
       ],
       "size": {
         "0": 393,
         "1": 206
       },
       "flags": {},
-      "order": 2,
+      "order": 3,
       "mode": 0,
       "inputs": [
         {
@@ -235,7 +235,7 @@
           "name": "loaded_frame_count🟦",
           "type": "INT",
           "links": [
-            51
+            57
           ],
           "shape": 3,
           "slot_index": 6
@@ -250,7 +250,7 @@
           "name": "loaded_width🟦",
           "type": "INT",
           "links": [
-            49
+            58
           ],
           "shape": 3,
           "slot_index": 8
@@ -259,7 +259,7 @@
           "name": "loaded_height🟦",
           "type": "INT",
           "links": [
-            50
+            59
           ],
           "shape": 3,
           "slot_index": 9
@@ -271,24 +271,99 @@
       "widgets_values": {}
     },
     {
+      "id": 35,
+      "type": "glslUniforms",
+      "pos": [
+        823,
+        73
+      ],
+      "size": {
+        "0": 140,
+        "1": 46
+      },
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "u_tex0",
+          "type": "IMAGE",
+          "link": 74
+        },
+        {
+          "name": "...",
+          "type": "*",
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "uniforms",
+          "type": "GLSL_CONTEXT",
+          "links": [
+            73
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "glslUniforms"
+      }
+    },
+    {
+      "id": 15,
+      "type": "glslEditor",
+      "pos": [
+        305,
+        333
+      ],
+      "size": [
+        631.9811344853491,
+        595.6500555972954
+      ],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "GLSL_CODE",
+          "type": "GLSL_CODE",
+          "links": [
+            61
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "glslEditor"
+      },
+      "widgets_values": [
+        "130",
+        "// <NAME>_TYPE: have the uniform type\nuniform U_TEX0_TYPE u_tex0;\n\nuniform vec4    u_date;\nuniform vec2    u_resolution;\nuniform float   u_delta;\nuniform float   u_time;\nuniform float   u_fps;\nuniform int     u_frame;\n\n// This overwrites all LYGIA sampling functions\n#define SAMPLER_TYPE U_TEX0_TYPE\n#define SAMPLER_FNC(TEX, UV) sampleTexture(TEX, UV)\nvec4 sampleTexture(U_TEX0_TYPE tex, vec2 st) {\n    #ifdef U_TEX0_TOTALFRAMES\n    return texture(tex, vec3(st, float(u_frame)));\n    #else\n    return texture(tex, st);\n    #endif\n}\n\n// Lets load some dithering functions\n#define DITHER_PRECISION 4\n#define SAMPLEDITHER_FNC ditherBayer\n#include \"lygia/math/decimate.glsl\"\n#include \"lygia/color/luma.glsl\"\n#include \"lygia/sample/dither.glsl\"\n\nvoid main() {\n    vec4 color = vec4(0.0, 0.0, 0.0, 1.0);\n    vec2 pixel = 1.0 / u_resolution;\n    vec2 st = gl_FragCoord.xy * pixel;\n\n    color = sampleDither(u_tex0, st, u_resolution * 0.25);\n    color.rgb = vec3(luma(color.rgb));\n\n    gl_FragColor = color;\n}\n",
+        "fragment"
+      ]
+    },
+    {
       "id": 26,
       "type": "VHS_VideoCombine",
       "pos": [
-        1086,
-        335
+        957,
+        261
       ],
       "size": [
-        447.2137366408217,
-        492.30772686046225
+        751.961134485349,
+        663.7281494140625
       ],
       "flags": {},
-      "order": 4,
+      "order": 5,
       "mode": 0,
       "inputs": [
         {
           "name": "images",
           "type": "IMAGE",
-          "link": 47
+          "link": 60
         },
         {
           "name": "audio",
@@ -328,7 +403,7 @@
           "hidden": false,
           "paused": false,
           "params": {
-            "filename": "AnimateDiff_00081.gif",
+            "filename": "AnimateDiff_00083.gif",
             "subfolder": "",
             "type": "output",
             "format": "image/gif",
@@ -336,67 +411,9 @@
           }
         }
       }
-    },
-    {
-      "id": 15,
-      "type": "glslEditor",
-      "pos": [
-        429,
-        121
-      ],
-      "size": {
-        "0": 605,
-        "1": 486
-      },
-      "flags": {},
-      "order": 1,
-      "mode": 0,
-      "outputs": [
-        {
-          "name": "GLSL_CODE",
-          "type": "GLSL_CODE",
-          "links": [
-            44
-          ],
-          "shape": 3,
-          "slot_index": 0
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "glslEditor"
-      },
-      "widgets_values": [
-        "130",
-        "\n// <NAME>_TYPE: have the uniform type\nuniform U_TEX0_TYPE u_tex0;\n\n\nuniform vec4    u_date;\nuniform vec2    u_resolution;\nuniform float   u_delta;\nuniform float   u_time;\nuniform float   u_fps;\nuniform int     u_frame;\n\n// This overwrites all LYGIA sampling functions\n#define SAMPLER_TYPE U_TEX0_TYPE\n#define SAMPLER_FNC(TEX, UV) sampleTexture(TEX, UV)\nvec4 sampleTexture(U_TEX0_TYPE tex, vec2 st) {\n    #ifdef U_TEX0_TOTALFRAMES\n    return texture(tex, vec3(st, float(u_frame)));\n    #else\n    return texture(tex, st);\n    #endif\n}\n\n// Lets load some dithering functions\n#define DITHER_PRECISION 4\n#define SAMPLEDITHER_FNC ditherBayer\n#include \"lygia/math/decimate.glsl\"\n#include \"lygia/color/luma.glsl\"\n#include \"lygia/sample/dither.glsl\"\n\nvoid main() {\n    vec4 color = vec4(0.0, 0.0, 0.0, 1.0);\n    vec2 pixel = 1.0 / u_resolution;\n    vec2 st = gl_FragCoord.xy * pixel;\n\n    color = sampleDither(u_tex0, st, u_resolution * 0.25);\n    color.rgb = vec3(luma(color.rgb));\n\n    gl_FragColor = color;\n}\n",
-        "fragment"
-      ]
     }
   ],
   "links": [
-    [
-      44,
-      15,
-      0,
-      25,
-      0,
-      "GLSL_CODE"
-    ],
-    [
-      45,
-      10,
-      0,
-      25,
-      1,
-      "*"
-    ],
-    [
-      47,
-      25,
-      0,
-      26,
-      0,
-      "IMAGE"
-    ],
     [
       48,
       10,
@@ -406,39 +423,71 @@
       "VHS_VIDEOINFO"
     ],
     [
-      49,
+      57,
       27,
-      8,
-      25,
+      6,
+      32,
       4,
       "INT"
     ],
     [
-      50,
+      58,
       27,
-      9,
-      25,
-      5,
+      8,
+      32,
+      2,
       "INT"
     ],
     [
-      51,
+      59,
       27,
-      6,
-      25,
+      9,
+      32,
       3,
       "INT"
+    ],
+    [
+      60,
+      32,
+      0,
+      26,
+      0,
+      "IMAGE"
+    ],
+    [
+      61,
+      15,
+      0,
+      32,
+      0,
+      "GLSL_CODE"
+    ],
+    [
+      73,
+      35,
+      0,
+      32,
+      1,
+      "*"
+    ],
+    [
+      74,
+      10,
+      0,
+      35,
+      0,
+      "*"
     ]
   ],
   "groups": [],
   "config": {},
   "extra": {
     "ds": {
-      "scale": 1.6105100000000019,
-      "offset": [
-        108.58748725155138,
-        27.554695778715942
-      ]
+      "scale": 0.8264462809917354,
+      "offset": {
+        "0": 81.83886551465108,
+        "1": 101.05994440270472
+      }
     }
   },
   "version": 0.4

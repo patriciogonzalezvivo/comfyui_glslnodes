@@ -28,11 +28,16 @@ Features:
 - [x] Add support for multiple textures
 - [x] Add support for multiple float uniforms
 - [x] Add dynamic inputs for uniforms
-- [ ] Add basic GLSL type nodes: `int`, `float`, `vec2`, `vec3` and `vec4`
+- [x] Add Uniforms node for efficiency by caching textures and texturesArrays together with the GL context
+- [x] Add basic GLSL type nodes: `int`, `float`, `vec2`, `vec3` and `vec4`
+- [ ] Add 2D position node
+- [ ] Add 3D position node
+- [ ] Add Color Picker
 - [ ] Add support for multiple buffers (`#ifdef BUFFER_X`)
 - [ ] Add support for multiple double uniforms (`#ifdef DOUBLEBUFFER_X`)
 - [ ] Add support for multiple pyramids (`#ifdef PYRAMID_X`)
-- [ ] Add support for Vertex Shaders and 3D Models
+- [ ] Add support for loading 3D geometry
+- [ ] Add support for Vertex Shaders
 - [ ] Add support for CubeMaps (Auto detect equirectangular, cross, etc)
 - [ ] Add support for BACKGROUND pass (`#ifdef BACKGROUND`)
 - [ ] Add support for POSTPROCESSING pass (`#ifdef POSTPROCESSING`)

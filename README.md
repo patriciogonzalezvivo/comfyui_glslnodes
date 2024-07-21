@@ -8,9 +8,9 @@ Here some examples:
 ![examples/edge_detection.json](https://github.com/user-attachments/assets/32e31f24-d988-474f-a0bb-b8599c0babc0)
 ![examples/look_up_table.json](https://github.com/user-attachments/assets/41f607fd-1602-4bde-8700-1e039f78f9ee)
 
-https://github.com/user-attachments/assets/3e0f9dc7-1e30-4c55-95ce-45757596a977
-
 https://github.com/user-attachments/assets/21537547-2ff4-45b1-8828-287d91a47774
+
+https://github.com/user-attachments/assets/3e0f9dc7-1e30-4c55-95ce-45757596a977
 
 Features:
 

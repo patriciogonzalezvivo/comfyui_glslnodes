@@ -33,8 +33,8 @@ Features:
 - [ ] Add 2D position node
 - [ ] Add 3D position node
 - [ ] Add Color Picker
-- [ ] Add support for multiple buffers (`#ifdef BUFFER_X`)
-- [ ] Add support for multiple double uniforms (`#ifdef DOUBLEBUFFER_X`)
+- [x] Add support for multiple buffers (`#ifdef BUFFER_X`)
+- [x] Add support for multiple double uniforms (`#ifdef DOUBLEBUFFER_X`)
 - [ ] Add support for multiple pyramids (`#ifdef PYRAMID_X`)
 - [ ] Add support for loading 3D geometry
 - [ ] Add support for Vertex Shaders

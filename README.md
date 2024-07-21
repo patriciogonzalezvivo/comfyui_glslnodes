@@ -10,9 +10,7 @@ Here some examples:
 
 https://github.com/user-attachments/assets/3e0f9dc7-1e30-4c55-95ce-45757596a977
 
-https://github.com/user-attachments/assets/a07dc178-5c13-47be-a5e1-d862a2035f57
-
-https://github.com/user-attachments/assets/c955e574-189a-4576-9857-37453f2a5ab8
+https://github.com/user-attachments/assets/21537547-2ff4-45b1-8828-287d91a47774
 
 Features:
 

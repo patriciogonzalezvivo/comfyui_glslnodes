@@ -20,7 +20,11 @@ export const removeLastUniform = (node) => {
 export const removeAllUniforms = (node) => {
     let totalInputs = node.inputs.length - 1;
     for (let i = totalInputs; i >= 0; i--) {
-        if (node.inputs[i].name.startsWith("u_")) {
+        if (node.inputs[i].name.startsWith("u_") || 
+            node.inputs[i].name === "uniforms" ||
+            node.inputs[i].name === "vertex_code" ||
+            node.inputs[i].name === "3D model"
+        ) {
             node.removeInput(i);
         }
     }

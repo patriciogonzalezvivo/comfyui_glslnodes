@@ -210,6 +210,16 @@ def getFragmentShader(fragment_code, defines):
     return out
 
 
+def getSizeFromCode(width:int, height:int, code: str, name:str):
+    size_found = re.findall(r"uniform\\s*sampler2D\\s*"+name+"\\;\\s*\\/\\/*\\s(\\d+)x(\\d+)", code)
+    if size_found:
+        return (int(size_found[0]), int(size_found[1]))
+    
+    scale_found = re.findall(r"uniform\\s*sampler2D\\s*"+name+"\\;\\s*\\/\\/*\\s(\\d+)x(\\d+)", code)
+    if scale_found:
+        return ( int(width * scale_found[0]), int(height * scale_found[1]))
+    
+    return (width, height)
 
 
 

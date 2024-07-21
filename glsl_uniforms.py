@@ -40,7 +40,7 @@ class GlslUniforms:
                 pbar.update_absolute(index + 1, total)
 
             if key.startswith("u_tex"):
-                context.setTexture(key, value)
+                context.loadTexture(key, value)
                 
             elif key.startswith("u_val"):
                 context.setUniform(key, value)

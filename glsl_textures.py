@@ -3,9 +3,12 @@ from PIL import Image
 import numpy as np
 
 class ImageTexture:
-    def __init__(self, image, name = None):
-        self.ctx = moderngl.get_context()
+    def __init__(self, image, name : str = None, ctx=None):
         self.name = name
+        if ctx is None:
+            self.ctx = moderngl.get_context()
+        else:
+            self.ctx = ctx
 
         self.width = image.shape[1]
         self.height = image.shape[0]
@@ -16,6 +19,7 @@ class ImageTexture:
         self.texture = self.ctx.texture(image.shape[1::-1], self.channels, image)
         self.sampler = self.ctx.sampler(texture=self.texture)
         self.sampler.filter = (self.ctx.NEAREST, self.ctx.NEAREST)
+
 
     def use(self, index, program = None):
         self.texture.use(index)
@@ -30,9 +34,12 @@ class ImageTexture:
 
 
 class ImageArrayTexture:
-    def __init__(self, imageList, name = None):
-        self.ctx = moderngl.get_context()
+    def __init__(self, imageList, name:str = None, ctx=None):
         self.name = name
+        if ctx is None:
+            self.ctx = moderngl.get_context()
+        else:
+            self.ctx = ctx
 
         self.width = imageList[0].shape[1]
         self.height = imageList[0].shape[0]
@@ -56,10 +63,11 @@ class ImageArrayTexture:
         self.sampler = self.ctx.sampler(texture=self.texture)
         self.sampler.filter = (self.ctx.LINEAR, self.ctx.LINEAR)
 
-    def use(self, index, program = None):
+
+    def use(self, index:int, program:moderngl.Program = None):
         if program is not None:
             if self.name in program:
-                program[self.name]= index
+                program[self.name] = index
 
             if f"{self.name}Resolution" in program:
                 program[f"{self.name}Resolution"] = (float(self.width), float(self.height))

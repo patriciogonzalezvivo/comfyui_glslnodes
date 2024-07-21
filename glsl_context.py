@@ -2,7 +2,7 @@ import platform
 import moderngl
 import numpy as np
 
-from .glsl_texture import ImageTexture, ImageArrayTexture
+from .glsl_textures import ImageTexture, ImageArrayTexture
 from .glsl_utils import GL_BACKENDS, GL_PLATFORMS
 from .glsl_utils import getDefaultVertexShader, getFragmentShader
 
@@ -27,7 +27,7 @@ class Context:
             self.defines.append((GL_PLATFORMS[backend_os], ""))
         
 
-    def setTexture(self, name, image):
+    def loadTexture(self, name, image):
         if len(image) is 1:
             tex = ImageTexture(image.numpy()[0], name)
             self.textures.append( tex )
@@ -45,19 +45,8 @@ class Context:
     def loadTextures(self, images: dict):
         for key, value in images.items():
             if value is not None:
-                if len(value) is 1:
-                    tex = ImageTexture(value.numpy()[0], key)
-                    self.textures.append( tex )
-                    self.uniforms[f"{key}Resolution"] = (float(tex.width), float(tex.height))
-                    self.defines.append((f"{key.upper()}_TYPE", "sampler2D"))
-                else:
-                    tex = ImageArrayTexture(value.numpy(), key)
-                    self.textures.append( tex )
-                    self.uniforms[f"{key}Resolution"] = (float(tex.width), float(tex.height))
-                    self.uniforms[f"{key}TotalFrames"] = float(tex.totalFrames)
-                    self.defines.append((f"{key.upper()}_TOTALFRAMES", float(tex.totalFrames)))
-                    self.defines.append((f"{key.upper()}_TYPE", "sampler2DArray"))
-    
+                self.loadTexture(key, value)
+
 
     def setUniform(self, name, value):
         if type(value) is int or type(value) is float:
@@ -79,7 +68,7 @@ class Context:
                     self.defines.append((f"{key.upper()}_TYPE", "vec" + str(len(value))))
 
 
-    def makeProgram(self, fragment_code: str, vertex_code=None, geometry=None):
+    def makeProgram(self, fragment_code: str, vertex_code=None, geometry=None) -> moderngl.Program:
         if vertex_code is None:
             vertex_code= getDefaultVertexShader(fragment_code["version"])
         
@@ -87,27 +76,31 @@ class Context:
                                     fragment_shader=getFragmentShader(fragment_code, self.defines) )
 
 
-    def makeBillboard(self, program):
+    def makeCanvasShader(self, fragment_code: str) -> moderngl.VertexArray:
+        prog = self.makeProgram(fragment_code, vertex_code=None, geometry=None)
         vbo = self.ctx.buffer(np.array([
                                             # First triangle
                                             -1.0, -1.0, 
                                             -1.0,  1.0,
-                                                1.0,  1.0,
+                                            1.0,  1.0,
                                             # Second triangle
                                             -1.0, -1.0,
-                                                1.0,  1.0,
-                                                1.0, -1.0,
+                                            1.0,  1.0,
+                                            1.0, -1.0,
                                         ], dtype='f4'))
-        return self.ctx.simple_vertex_array(program, vbo, 'a_position')
+        return self.ctx.simple_vertex_array(prog, vbo, 'a_position')
+    
 
-
-    def useTextures(self, program):
+    def useTextures(self, program) -> int:
+        textureIndex = 0
         for i, texture in enumerate(self.textures):
-            texture.use(i, program)
+            texture.use(textureIndex, program)
+            textureIndex += 1
+        return textureIndex
 
 
     def useUniforms(self, program):
         for key, value in self.uniforms.items():
-            if key in program:
-                if value is not None:
+            if value is not None:
+                if key in program:
                     program[key] = value

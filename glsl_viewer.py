@@ -37,7 +37,7 @@ class GlslViewer:
     RETURN_NAMES = ("images", "mask")
 
     def main(self, fragment_code, width, height, frames, fps, **kwargs):
-        print("Optional Inputs", kwargs.keys())
+        # print("Optional Inputs", kwargs.keys())
 
         context = None
         geometry = None

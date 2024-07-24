@@ -54,6 +54,26 @@ class GlslVec2:
 
     def main(self, x, y):
         return ((x, y), )
+    
+
+class GlslVec2Pos:
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "pos": ("VEC2POS", { "default": (0.0, 0.0), }),
+            }
+        }
+    
+    CATEGORY = "GLSL"
+    FUNCTION = "main"
+
+    RETURN_TYPES = ("VEC2", )
+    RETURN_NAMES = ("vec2", )
+
+    def main(self, pos):
+        pos = pos.split(",")
+        return ((float(pos[0]), float(pos[1])), )
 
 
 class GlslVec3:

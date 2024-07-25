@@ -3,7 +3,6 @@ import re
 
 GL_BACKENDS = {
     "Linux": "egl",
-    "Darwin": "cgl",
 }
 
 GL_PLATFORMS = {

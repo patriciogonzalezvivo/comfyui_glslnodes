@@ -95,6 +95,26 @@ class GlslVec3:
 
     def main(self, x, y, z):
         return ((x, y, z), )
+    
+
+class GlslVec3Pos:
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "pos": ("VEC3POS", { "default": (0.0, 0.0, 0.0),}),
+            }
+        }
+    
+    CATEGORY = "GLSL"
+    FUNCTION = "main"
+
+    RETURN_TYPES = ("VEC3", )
+    RETURN_NAMES = ("vec3", )
+
+    def main(self, pos):
+        pos = pos.split(",")
+        return ((float(pos[0]), float(pos[1]), float(pos[1])), )
 
 
 class GlslVec4:
@@ -117,3 +137,23 @@ class GlslVec4:
 
     def main(self, x, y, z, w):
         return ((x, y, z,w), )
+    
+
+class GlslVec4Color:
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "color": ("VEC4COLOR", { "default": (1.0, 0.0, 0.0, 1.0) }),
+            }
+        }
+    
+    CATEGORY = "GLSL"
+    FUNCTION = "main"
+
+    RETURN_TYPES = ("VEC4", )
+    RETURN_NAMES = ("vec4", )
+
+    def main(self, color):
+        color = color.split(",")
+        return ((float(color[0]), float(color[1]), float(color[2]), float(color[3]) ), )

@@ -9,6 +9,35 @@ export function makeUUID() {
     })
     return uuid
 }
+
+
+/**
+ * Calculate total height of DOM element child
+ *
+ * @param {HTMLElement} parentElement - The target dom element
+ * @returns {number} the total height
+ */
+export function calculateTotalChildrenHeight(parentElement) {
+    let totalHeight = 0
+  
+    for (const child of parentElement.children) {
+      const style = window.getComputedStyle(child)
+  
+      // Get height as an integer (without 'px')
+      const height = Number.parseInt(style.height, 10)
+  
+      // Get vertical margin as integers
+      const marginTop = Number.parseInt(style.marginTop, 10)
+      const marginBottom = Number.parseInt(style.marginBottom, 10)
+  
+      // Sum up height and vertical margins
+      totalHeight += height + marginTop + marginBottom
+    }
+  
+    return totalHeight
+  }
+  
+
 export const removeLastUniform = (node) => {
     let last_index = node.inputs.length - 1;
     let last_input = node.inputs[last_index];

@@ -1,6 +1,6 @@
 import { app } from '../../scripts/app.js'
 
-import { makeUUID, calculateTotalChildrenHeight } from './utils.js'
+import { Vector, Matrix } from './utils.js'
 
 class Vec2PosWidget {
     constructor(...args) {
@@ -89,7 +89,6 @@ class Vec2PosWidget {
         if (e.type === 'pointermove') {
             this.value = [  (pos[0] / this.wWidth - 0.5) * 2.0, 
                             ((pos[1] - this.wY) / this.wHeight - 0.5) * 2.0];
-            // console.log("mouse", e, pos, node, this.value);
         }
     }
 
@@ -103,40 +102,155 @@ class Vec2PosWidget {
      }
 }
 
-// class Vec3PosWidget {
-//     constructor(...args) {
-//         const [inputName, opts] = args
+class Vec3PosWidget {
+    constructor(...args) {
+        const [inputName, opts] = args
 
-//         this.name = inputName || 'Vec3Pos'
-//         this.type = 'VEC3POS'
-//         this.selectedPointIndex = null
-//         this.options = opts
-//         this.value = this.value || [0, 0]
-//         this.size = [200, 200]
-//         this.scale = 50;
-//         this.wY = 0;
-//     }
+        this.name = inputName || 'Vec3Pos'
+        this.type = 'VEC3POS'
+        this.selectedPointIndex = null
+        this.options = opts
+        this.value = this.value || [0, 0, 1.0]
+        this.size = [200, 200]
+        this.scale = 50;
+        this.wY = 0;
 
-//     draw(ctx, node, widgetWidth, widgetY) {
-//     }
+        this.camera = new Matrix();
+        this.vector = new Vector(this.value);
+        this.shapes = [
+            {
+                edgeColour: '#555',
+                nodes: [[-50, 0.0, 0], [50, 0.0, 0],
+                        [0.0, -50, 0], [0.0, 50, 0],
+                        [0.0, 0.0, -50], [0.0, 0.0, 50]],
+                edges: [[0,1], [2,3], [4,5]]
+            },
+            {
+                textColour: '#fff',
+                nodes: [[68, 0.0, 0], [-68, 0.0, 0],
+                        [0.0, 68, 0], [0.0, -68, 0],
+                        [0.0, 0.0, 68], [0.0, 0.0, -68]],
+                text: ['x', '-x', 'y', '-y', 'z', '-z']
+            }
+        ];
+        this.center = [0, 0, 0];
+    }
 
-//     mouse(e, pos, node) {
-//         if (e.type === 'pointermove') {
-//             this.value = [  (pos[0] / this.wWidth - 0.5) * 2.0, 
-//                             ((pos[1] - this.wY) / this.wHeight - 0.5) * 2.0];
-//             // console.log("mouse", e, pos, node, this.value);
-//         }
-//     }
+    getCenter () {
+        return [this.wWidth * 0.5, this.wHeight * 0.5 + this.wY, 0];
+    }
 
-//     computeSize(width) {
-//         return [width, width - this.wY]
-//     }
+    viewFromCamera (vertex) {
+        let A = this.camera.getMult(vertex);
+        A.add(this.getCenter());
+        return [A.x, A.y];
+    }
 
-//     async serializeValue(nodeId, widgetIndex) {
-//         // converte this.value to JSON
-//         return [this.value[0], -this.value[1]].toString();
-//      }
-// }
+    drawShapeEdges (ctx, shape) {
+        let nodes = shape.nodes;
+        ctx.strokeStyle = shape.edgeColour;
+        for (let e in shape.edges) {
+            let coord = this.viewFromCamera(nodes[shape.edges[e][0]]);
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(coord[0], coord[1]);
+            coord = this.viewFromCamera(nodes[shape.edges[e][1]]);
+            ctx.lineTo(coord[0], coord[1]);
+            ctx.stroke();
+        }
+    }
+
+    drawShapeNodes (ctx, shape) {
+        let radius = shape.nodeRadius || 4;
+        ctx.fillStyle = shape.nodeColour;
+        for (let n in shape.nodes) {
+            let coord = this.viewFromCamera(shape.nodes[n]);
+            ctx.beginPath();
+            ctx.arc(coord[0], coord[1], radius, 0 , 2 * Math.PI, false);
+            ctx.fill();
+        }
+    }
+
+    drawShapeText (ctx, shape) {
+        ctx.fillStyle = shape.textColour;
+        for (let n in shape.nodes) {
+            let coord = this.viewFromCamera(shape.nodes[n]);
+            ctx.textBaseline = 'middle';
+            ctx.fillText(shape.text[n], coord[0], coord[1]);
+        }
+    }
+
+    draw(ctx, node, widgetWidth, widgetY) {
+        this.wY = widgetY;
+        this.wWidth = widgetWidth;
+        this.wHeight = node.size[1] - widgetY;
+
+        for (let s in this.shapes) {
+            let shape = this.shapes[s];
+            if (shape.edgeColour)
+                this.drawShapeEdges(ctx, shape);
+            
+            if (shape.nodeColour)
+                this.drawShapeNodes(ctx, shape);
+        
+            if (shape.text)
+                this.drawShapeText(ctx, shape);
+        }
+
+        this.drawShapeEdges(ctx, {
+            edgeColour: '#999',
+            nodes: [[0,0,0], this.value],
+            edges: [[0,1]]
+        });
+
+        this.drawShapeNodes(ctx, {
+            nodeColour: this.overPoint ? '#fff' : '#999',
+            nodeRadius: this.overPoint ? 4 : 2,
+            nodes: [this.value],
+        });
+    }
+
+    mouse(e, pos, node) {
+        if (e.type === 'pointerdown') {
+            this.dragOffset = pos;
+            let p = new Vector(this.viewFromCamera(this.value));
+            let diff = p.getSub(pos);
+            this.overPoint = diff.getLength() < 10;
+        }
+        else if (e.type === 'pointermove') {
+            let x = pos[0];
+            let y = pos[1];
+    
+            var dx = 0.01 * (x - this.dragOffset[0]);
+            var dy = 0.01 * (y - this.dragOffset[1]);
+    
+            if (this.overPoint) {
+                let invM = this.camera.getInv();
+                let vel = invM.getMult([dx, dy, 0.0]);
+                vel.mult(2);
+                this.vector.add(vel);
+                this.value = [this.vector.x * this.scale, this.vector.y * this.scale, this.vector.z * this.scale];
+            }
+            else {
+                this.camera.rotateX(dy);
+                this.camera.rotateY(dx);
+            }
+    
+            this.dragOffset = pos;
+        }
+        else if (e.type === 'pointerup') {
+        }
+    }
+
+    computeSize(width) {
+        return [width, width - this.wY]
+    }
+
+    async serializeValue(nodeId, widgetIndex) {
+        // converte this.value to JSON
+        return [this.value[0], this.value[1], this.value[2]].toString();
+    }
+}
 
 class Vec4ColorWidget {
     constructor(...args) {
@@ -157,6 +271,26 @@ class Vec4ColorWidget {
     }
 
     draw(ctx, node, widgetWidth, widgetY) {
+        this.wY = widgetY;
+        this.wWidth = widgetWidth;
+        this.wHeight = node.size[1] - widgetY;
+
+        let y = widgetY;
+
+        let width = widgetWidth;
+        let height = node.size[1];
+
+        let barWidth = width * this.brigthnessWidthPct;
+        let barHeight = height - y;
+
+        let diskWidth = width - barWidth;
+        let diskHeight = height - y;
+
+        let diskX = diskWidth * 0.5;
+        let diskY = diskHeight * 0.5 + y;
+
+        let diskRadiusX = diskWidth * 0.5 - 1.0;
+        let diskRadiusY = diskHeight * 0.5 - 1.0;
 
         // generic function for drawing a canvas disc
         function drawDisk (ctx, coords, radius, steps, colorCallback) {
@@ -192,26 +326,6 @@ class Vec4ColorWidget {
             }
             ctx.restore();
         }
-        this.wY = widgetY;
-        this.wWidth = widgetWidth;
-        this.wHeight = node.size[1] - widgetY;
-
-        let y = widgetY;
-
-        let width = widgetWidth;
-        let height = node.size[1];
-
-        let barWidth = width * this.brigthnessWidthPct;
-        let barHeight = height - y;
-
-        let diskWidth = width - barWidth;
-        let diskHeight = height - y;
-
-        let diskX = diskWidth * 0.5;
-        let diskY = diskHeight * 0.5 + y;
-
-        let diskRadiusX = diskWidth * 0.5 - 1.0;
-        let diskRadiusY = diskHeight * 0.5 - 1.0;
 
         // Draw HueSaturation Color Disk
         drawDisk(
@@ -481,6 +595,13 @@ app.registerExtension({
             VEC2POS:  (node, inputName, inputData, app) => {
                 return {
                     widget: node.addCustomWidget(new Vec2PosWidget(inputName, inputData), ),
+                    minWidth: 200,
+                    minHeight: 300,
+                }
+            },
+            VEC3POS:  (node, inputName, inputData, app) => {
+                return {
+                    widget: node.addCustomWidget(new Vec3PosWidget(inputName, inputData), ),
                     minWidth: 200,
                     minHeight: 300,
                 }

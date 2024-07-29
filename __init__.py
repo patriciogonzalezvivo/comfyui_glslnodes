@@ -19,7 +19,7 @@ NODE_CLASS_MAPPINGS = {
     'vec3': GlslVec3,
     'vec4': GlslVec4,
     'vec2 (pos)': GlslVec2Pos,
-    # 'vec3 (pos)': GlslVec3Pos,
+    'vec3 (pos)': GlslVec3Pos,
     'vec4 (color)': GlslVec4Color,
     'glslUniforms': GlslUniforms,
     'glslViewer': GlslViewer,

@@ -31,7 +31,7 @@ Features:
 - [x] Add Uniforms node for efficiency by caching textures and texturesArrays together with the GL context
 - [x] Add basic GLSL type nodes: `int`, `float`, `vec2`, `vec3` and `vec4`
 - [x] Add 2D position node
-- [ ] Add 3D position node
+- [x] Add 3D position node
 - [x] Add Color Picker
 - [x] Add support for multiple buffers (`#ifdef BUFFER_X`)
 - [x] Add support for multiple double uniforms (`#ifdef DOUBLEBUFFER_X`)

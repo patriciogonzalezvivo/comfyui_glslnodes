@@ -1,2 +1,3 @@
 moderngl
 numpy
+snowy

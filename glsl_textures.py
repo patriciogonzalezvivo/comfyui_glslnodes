@@ -10,9 +10,42 @@ class ImageTexture:
         else:
             self.ctx = ctx
 
+        print(name, image.shape)
         self.width = image.shape[1]
         self.height = image.shape[0]
-        self.channels = image.shape[2]
+
+        if len(image.shape) == 2:
+            print(name, "is a MASK")
+            self.channels = 3
+
+            tmp = np.zeros( ( image.shape[0], image.shape[1], 3 ) )
+            tmp[:,:,0] = image
+            tmp[:,:,1] = image
+            tmp[:,:,2] = image
+
+            # If the snowy library is installed, generate a signed distance field from the mask
+            try:
+                import snowy
+                mask = snowy.rgb_to_luminance( snowy.extract_rgb(tmp) )
+                dist = snowy.generate_sdf(mask != 0.0)
+                dist = dist / 255.0
+                tmp[:,:,1] = np.clip(dist[...,0], 0.0, 1.0)
+                tmp[:,:,2] = 1.0+np.clip(dist[...,0], -1.0, 0.0)
+
+            except ModuleNotFoundError:
+                print("snowy is not installed")
+
+            image = tmp
+            
+        elif image.shape[2] == 2:
+            print(name, "is a FLOW")
+            self.channels = 3
+
+            # FLOW should be more that one image but just in case
+            # TODO: ...
+
+        else:
+            self.channels = image.shape[2]
 
         image = np.flip(image, 0)
         image = (image * 255).astype(np.uint8)
@@ -43,7 +76,53 @@ class ImageArrayTexture:
 
         self.width = imageList[0].shape[1]
         self.height = imageList[0].shape[0]
-        self.channels = imageList[0].shape[2]
+
+        if len(imageList[0].shape) == 2:
+            print(name, "is a MASK")
+            self.channels = 3
+
+            tmpList = []
+            for image in imageList:
+                tmp = np.zeros( ( image.shape[0], image.shape[1], 3 ) )
+                tmp[:,:,0] = image
+                tmp[:,:,1] = image
+                tmp[:,:,2] = image
+
+                # If the snowy library is installed, generate a signed distance field from the mask
+                try:
+                    import snowy
+                    mask = snowy.rgb_to_luminance( snowy.extract_rgb(tmp) )
+                    dist = snowy.generate_sdf(mask != 0.0)
+                    dist = dist / 255.0
+                    tmp[:,:,1] = np.clip(dist[...,0], 0.0, 1.0)
+                    tmp[:,:,2] = 1.0+np.clip(dist[...,0], -1.0, 0.0)
+
+                except ModuleNotFoundError:
+                    print("snowy is not installed")
+
+                tmpList.append(tmp)
+            
+            imageList = tmpList
+            
+        elif imageList[0].shape[2] == 2:
+            print(name, "is a FLOW")
+            self.channels = 3
+
+            # FLOW videos have one less frame that original. First one is empty
+            tmpList = [ np.zeros( ( imageList[0].shape[0], imageList[0].shape[1], 3 ) ) * 0.5 + 0.5 ]
+
+            for image in imageList:
+                tmp = np.zeros( ( image.shape[0], image.shape[1], 3 ) )
+                tmp[:,:,0] = np.clip( (image[:,:,0] / 255.0) * 0.5 + 0.5, 0.0, 1.0)
+                tmp[:,:,1] = np.clip( (image[:,:,1] / 255.0) * 0.5 + 0.5, 0.0, 1.0)
+                tmp[:,:,2] = 0.0
+                tmpList.append(tmp)
+            
+            imageList = tmpList
+
+        else:
+            self.channels = imageList[0].shape[2]
+            
         self.totalFrames = len(imageList)
 
         dataList = []

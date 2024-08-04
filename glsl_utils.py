@@ -1,5 +1,6 @@
 import requests
 import re
+import numpy as np
 
 GL_BACKENDS = {
     "Linux": "egl",
@@ -220,5 +221,53 @@ def getSizeFromCode(width:int, height:int, code: str, name:str):
     
     return (width, height)
 
+
+def hue_to_rgb(hue):
+    """Convert hue to RGB."""
+    if isinstance(hue, np.ndarray):
+        rgb = np.zeros((hue.shape[0], hue.shape[1], 3))
+        rgb[..., 0] = hue * 6.0
+        rgb[..., 1] = hue * 6.0 + 4.0
+        rgb[..., 2] = hue * 6.0 + 2.0
+    else:
+        rgb = np.zeros(3)
+        rgb[0] = hue * 6.0
+        rgb[1] = hue * 6.0 + 4.0
+        rgb[2] = hue * 6.0 + 2.0
+
+    rgb = np.abs(np.mod(rgb, 6.0) - 3.0) - 1.0
+    rgb = np.clip(rgb, 0.0, 1.0)
+    return rgb
+
+
+def encode_polar(a: np.ndarray, rad):
+    """Encode polar cordinates to Hue (angle) and Saturate (radius)."""
+    rgb = hue_to_rgb(a)
+    rgb = saturate(rgb, rad)
+    return rgb
+
+
+def saturate(rgb, sat):
+    """Set saturate."""
+    rgb[..., 0] = rgb[..., 0] * sat + (1.0-sat)
+    rgb[..., 1] = rgb[..., 1] * sat + (1.0-sat)
+    rgb[..., 2] = rgb[..., 2] * sat + (1.0-sat)
+    return rgb
+
+
+def process_flow(flow):
+    """Process flow."""
+
+    h, w, _ = flow.shape
+    distances = np.sqrt(np.square(flow[..., 0]) + np.square(flow[..., 1]))
+
+    max_distance = distances.max()
+    dX = flow[..., 0] / float(max_distance)
+    dY = flow[..., 1] / float(max_distance)
+    rad = np.sqrt(np.square(dX) + np.square(dY))
+    a = (np.arctan2(dY, dX) / np.pi + 1.0) * 0.5
+    rgb = encode_polar(a, rad)
+
+    return (rgb * 255).astype(np.uint8), max_distance
 
 

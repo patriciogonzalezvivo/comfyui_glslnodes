@@ -48,6 +48,8 @@ app.registerExtension({
                     const fromNodeOutput = fromNode.outputs[link_info.origin_slot];
                     const fromNodeOutputType = fromNodeOutput.type;
 
+                    console.log("CONNECTING", fromNodeOutputType)
+
                     if (fromNodeOutputType === "GLSL_CONTEXT") {
                         let isUniformsAlreadyConnected = false;
                         for (let i = 0; i < this.inputs.length; i++)
@@ -57,7 +59,9 @@ app.registerExtension({
                         if (!isUniformsAlreadyConnected) 
                             addInput(this, index, "uniforms", fromNodeOutputType, false);
                     }
-                    else if (fromNodeOutputType === "IMAGE")
+                    else if (   fromNodeOutputType === "IMAGE" ||
+                                fromNodeOutputType === "MASK" ||
+                                fromNodeOutputType === "OPTICAL_FLOW")
                         addInput(this, index, "u_tex", fromNodeOutputType);
         
                     else if (   fromNodeOutputType === "INT" || 

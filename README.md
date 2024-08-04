@@ -37,8 +37,8 @@ Features:
 - [x] Add support for multiple buffers (`#ifdef BUFFER_X`)
 - [x] Add support for multiple double uniforms (`#ifdef DOUBLEBUFFER_X`)
 - [ ] Add support for multiple pyramids (`#ifdef PYRAMID_X`)
-- [ ] Add support for OPTICAL_FLOW textures
-- [ ] Add support for MASK textures (create SDF on other channels)
+- [x] Add support for OPTICAL_FLOW textures
+- [x] Add support for MASK textures (create SDF on other channels)
 - [ ] Add support for loading 3D geometry
 - [ ] Add support for Vertex Shaders
 - [ ] Add support for CubeMaps (Auto detect equirectangular, cross, etc)

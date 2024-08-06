@@ -91,6 +91,7 @@ export class GlslEditorACE {
                 mode: "ace/mode/glsl",
                 selectionStyle: "text",
                 showPrintMargin: false,
+                hasCssTransforms: true,
             })
 
             editor.on('change', () => {

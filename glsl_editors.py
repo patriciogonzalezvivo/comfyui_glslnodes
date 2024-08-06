@@ -45,7 +45,7 @@ class GlslEditor:
         return (out, )
     
 
-class GlslEditorIde:
+class GlslEditorPro:
     @classmethod
     def INPUT_TYPES(cls):
         return {

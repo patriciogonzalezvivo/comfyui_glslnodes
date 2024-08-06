@@ -16,7 +16,7 @@ export const init_editor = async () => {
     ]
 
     const ace_themes = [
-        "tomorrow_night", "tomorrow_night_bright", "twilight"
+        "tomorrow_night_bright"
     ]
   
     ace_keyboards.forEach((keyboard) => {
@@ -43,11 +43,11 @@ export const init_editor = async () => {
     }
 }
 
-export class GlslEditorIDE {
+export class GlslEditorACE {
     static i_editor = 0
     constructor(...args) {
         const [inputName, opts] = args
-        console.log('GlslEditorIDE', opts)
+        console.log('GlslEditorACE', opts)
         this.name = inputName
         this.type = opts[0]
         this.options = opts[1]
@@ -63,7 +63,7 @@ export class GlslEditorIDE {
 
     draw(ctx, node, widgetWidth, widgetY) {
         if (node.editor === undefined) {
-            const editor_id = `glslnode_editor_${GlslEditorIDE.i_editor++}`    
+            const editor_id = `glslnode_editor_${GlslEditorACE.i_editor++}`    
             const glslnode_div = document.createElement('div')
             glslnode_div.classList.add('glslnodeEditorContainer')
         
@@ -117,7 +117,7 @@ app.registerExtension({
         return {
             GLSL_STRING:  (node, inputName, inputData, app) => {
                 return {
-                    widget: node.addCustomWidget(new GlslEditorIDE(inputName, inputData), ),
+                    widget: node.addCustomWidget(new GlslEditorACE(inputName, inputData), ),
                     minWidth: 600,
                     minHeight: 400,
                 }

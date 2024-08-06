@@ -17,16 +17,19 @@ Here some examples:
 ![examples/look_up_table.json](https://github.com/user-attachments/assets/41f607fd-1602-4bde-8700-1e039f78f9ee)
 
 `examples/video_flow.json`
+
 https://github.com/user-attachments/assets/995f541e-cb11-42ff-95ea-b4e08d010778
 
-
 `examples/video_mask.json`
+
 https://github.com/user-attachments/assets/1f2a230d-b703-4889-b3b5-659855444366
 
 `examples/video_dither.json`
+
 https://github.com/user-attachments/assets/21537547-2ff4-45b1-8828-287d91a47774
 
 `examples/shadertoy.json`
+
 https://github.com/user-attachments/assets/3e0f9dc7-1e30-4c55-95ce-45757596a977
 
 Features:
@@ -34,30 +37,30 @@ Features:
 * It the code is compatible with [GlslViewer](https://github.com/patriciogonzalezvivo/glslViewer), [Glsl-Pipeline](https://github.com/patriciogonzalezvivo/glsl-pipeline/) and [GlslCanvas](https://marketplace.visualstudio.com/items?itemName=circledev.glsl-canvas) by following the following specs for:
   * [Uniforms](https://github.com/patriciogonzalezvivo/glslViewer/wiki/GlslViewer-UNIFORMS)
   * [Defines](https://github.com/patriciogonzalezvivo/glslViewer/wiki/GlslViewer-DEFINES)
-* It contain support for [LYGIA Shader Library](https://lygia.xyz/) by resolving all `#include` directives from [LYGIA's Server](https://lygia.xyz/)
+* It contain [LYGIA Shader Library](https://lygia.xyz/) by resolving all `#include` directives from [LYGIA's Server](https://lygia.xyz/)
 
 # Roadmap
 
-- [x] Add support for GLSL shaders
-- [x] Add support for [LYGIA Shader Library](https://lygia.xyz/)
-- [ ] Add JS editor on the node client UI
-- [x] Add support for multiple frames
-- [x] Add support for multiple textures
-- [x] Add support for multiple float uniforms
-- [x] Add dynamic inputs for uniforms
-- [x] Add Uniforms node for efficiency by caching textures and texturesArrays together with the GL context
-- [x] Add basic GLSL type nodes: `int`, `float`, `vec2`, `vec3` and `vec4`
-- [x] Add 2D position node
-- [x] Add 3D position node
-- [x] Add Color Picker
-- [x] Add support for multiple buffers (`#ifdef BUFFER_X`)
-- [x] Add support for multiple double uniforms (`#ifdef DOUBLEBUFFER_X`)
-- [ ] Add support for multiple pyramids (`#ifdef PYRAMID_X`)
-- [x] Add support for OPTICAL_FLOW textures
-- [x] Add support for MASK textures (create SDF on other channels)
-- [ ] Add support for loading 3D geometry
-- [ ] Add support for Vertex Shaders
-- [ ] Add support for CubeMaps (Auto detect equirectangular, cross, etc)
-- [ ] Add support for BACKGROUND pass (`#ifdef BACKGROUND`)
-- [ ] Add support for POSTPROCESSING pass (`#ifdef POSTPROCESSING`)
-- [ ] Add support for SCENE pass (`#ifdef SCENE`) that exposes `u_scene` and `u_sceneDepth`
+- [x] 100, 120, 130, 140, 150, 300, 330, 330 core, 400, 410, 420, 430 and 440 GLSL shaders
+- [x] Resolves dependencies to [LYGIA Shader Library](https://lygia.xyz/)
+- [x] Code editor (ACE) on GlslEditorPro nodes
+- [x] produce multiple frames
+- [x] reads multiple textures and texturesArrays
+- [x] multiple float, vec2, vec3, vec4 uniforms
+- [x] Dynamic inputs for uniforms
+- [x] Uniforms node for efficiency by caching textures and texturesArrays together with the GL context
+- [x] basic GLSL type nodes: `int`, `float`, `vec2`, `vec3` and `vec4`
+- [x] 2D position node widget
+- [x] 3D position node widget
+- [x] Color Picker node widget
+- [x] multiple buffers (`#ifdef BUFFER_X`)
+- [x] multiple double uniforms (`#ifdef DOUBLEBUFFER_X`)
+- [ ] multiple pyramids (`#ifdef PYRAMID_X`)
+- [x] OPTICAL_FLOW textures
+- [x] MASK textures (create SDF on other channels)
+- [ ] loading 3D geometry
+- [ ] Vertex Shaders
+- [ ] CubeMaps (Auto detect equirectangular, cross, etc)
+- [ ] BACKGROUND pass (`#ifdef BACKGROUND`)
+- [ ] POSTPROCESSING pass (`#ifdef POSTPROCESSING`)
+- [ ] SCENE pass (`#ifdef SCENE`) that exposes `u_scene` and `u_sceneDepth`

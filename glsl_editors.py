@@ -43,3 +43,26 @@ class GlslEditor:
         out["src"] = resolveLygia(code)
         out["specs"] = "raw"
         return (out, )
+    
+
+class GlslEditorIde:
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "version" : (GLSL_VERSIONS, {"default": "130" }),
+                "type": (["fragment"], { "default": "fragment" }),
+                "code": ("GLSL_STRING", {"default": DEFAULT_FRAGMENT_SHADER}),
+            },
+        }
+    CATEGORY = "GLSL"
+    FUNCTION = "main"
+    RETURN_TYPES = ("GLSL_CODE", )
+
+    def main(self, **kwargs):
+        out = {}
+        out["version"] = kwargs["version"]
+        out["type"] = kwargs["type"]
+        out["src"] = resolveLygia( kwargs["code"] )
+        out["specs"] = "raw"
+        return (out, )

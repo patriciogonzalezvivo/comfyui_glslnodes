@@ -1,0 +1,188 @@
+#glslnode_editor_ide {
+    position: initial;
+}
+
+.glslnodeMax {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+    overflow: hidden;
+}
+  
+.glslnodeInvisible {
+    display: none;
+}
+  
+.glslnodeUL {
+    margin-top: 0;
+    margin-bottom: 0;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+  
+.glslnodeLI {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+  
+.glslnodeFileSpan {
+    /* The filename will take the available space on the left */
+    flex-grow: 1;
+}
+  
+.glslnodeSpanButton {
+    /* The buttons will be stacked on the right */
+    margin-left: 10px;
+    cursor: crosshair;
+}
+  
+.glslnodeEditorFullscreen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    z-index: 1000;
+}
+.glslnodeEditorContainer {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+}
+  
+.glslnodeEditorPre {
+    flex: 1;
+    margin: 0;
+    width: 100%;
+    /* For Firefox */
+    scrollbar-color: #666 #333; 
+    scrollbar-width: thin;  
+}
+  
+.glslnodeEditorPre::-webkit-scrollbar {
+    width: 12px; 
+    background-color: #333; /* track */
+}
+  
+.glslnodeEditorPre::-webkit-scrollbar-thumb {
+    background-color: #666; /* thumb */
+    border-radius: 6px;
+}
+  
+  
+.glslnodeTray {
+    display: flex;
+    align-items: flex-start;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+}
+  
+.glslnodeTrayHeader {
+    cursor: pointer;
+    width: 8px;
+    margin-bottom: 1px;
+    vertical-align: top;
+}
+  
+.glslnodeCaret {
+    font-size: 8px;
+    cursor: crosshair;
+    margin: 0;
+    pad: 0;
+}
+  
+.glslnodeHidden {
+    display: none;
+}
+  
+.glslnodeTrayOpen {
+    display: block;
+}
+  
+.glslnodeTrayClosed {
+    display: none;
+}
+  
+.glslnodeTrayContent {
+    display: flex;
+    flex-direction: column;
+    /* align-items: center; */
+    margin-left: 10px;
+    width: 100%;
+}
+  
+.glslnodeButtonRow {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    margin-top: 5px;
+}
+  
+.glslnodeEditorButton {
+    position: relative;
+    /* width: 100%; */
+    height: 20px;
+    padding: 0;
+    margin-top: 0;
+    margin-bottom: 5px;
+    margin-left: 2px;
+    margin-right: 2px;
+    border-radius: 2px;
+    cursor: crosshair;
+    font-size: 12px; 
+    /*font-weight: bold;*/
+    /*text-transform: uppercase;*/
+    outline: none;
+    flex: 1;
+}
+  
+.glslnodeTextInput {
+    position: relative;
+    /* width: 100%; */
+    height: 20px;
+    padding: 2px;
+    margin-top: o;
+    margin-bottom: 0;
+    margin-left: 5px;
+    margin-right: 5px;
+    border-radius: 5px;
+    cursor: crosshair;
+    font-size: 12px; 
+    /*font-weight: bold;*/
+    /*text-transform: uppercase;*/
+    outline: none;
+    flex: 1;
+}
+  
+  
+.glslnodeEditorButton:hover {
+    background-color: #2980b9;
+}
+  
+main {
+    width: 100%;
+    height: 100%;
+}
+  
+/* For WebKit-based browsers (Chrome, Safari, Opera) */
+/* Custom scrollbar styling */
+/* Note: These styles will be ignored by non-WebKit browsers */
+::-webkit-scrollbar {
+    width: 12px; /* Width of the scrollbar */
+    background-color: #333; /* Background color of the track */
+}
+  
+::-webkit-scrollbar-thumb {
+    background-color: #666; /* Color of the thumb */
+    border-radius: 6px; /* Rounded corners for the thumb */
+}
+  

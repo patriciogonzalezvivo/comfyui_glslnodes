@@ -13,7 +13,6 @@ export const init_editor = async () => {
         "theme/tomorrow_night_bright", "theme-tomorrow_night_bright.js_",
         "keyboard/vscode", "keybinding-vscode.js_",
         "ext/language_tools", "ext-language_tools.js_",
-        "ext/inline_auto_complete", "ext-inline_auto_complete.js_",
     ]
     
     for (let i = 0; i < features.length; i += 2) {
@@ -33,7 +32,7 @@ const getLygiaCompleter = () => {
             return
 
         let lygiaFiles = [];
-
+        
         for (let i = 0; i < data.length; i++) {
             const file = data[i];
             lygiaFiles.push({
@@ -51,8 +50,7 @@ const getLygiaCompleter = () => {
                     return
                 }
                 // console.log(pos, session.getTokenAt(pos.row, pos.column));
-                callback(null, wordList.map(function(ea) {
-                    // console.log(ea);
+                callback(null, lygiaFiles.map(function(ea) {
                     return ea;
                 }))
             }
@@ -75,7 +73,7 @@ export class GlslEditorACE {
         this.value = this.value || this.options.default
         this.size = [400, 300]
 
-        // 
+        // ACE editor
         this.editor = null
         this.div_widget = null
     }
@@ -89,12 +87,8 @@ export class GlslEditorACE {
             const div_widget = node.addDOMWidget(glslnode_div.id, "div", glslnode_div)
         
             const editor_pre = document.createElement('pre')
-            // editor_pre.classList.add('glslnode-editor')
             editor_pre.id = editor_id
             editor_pre.classList.add('glslnodeEditorPre')
-
-            // force position to initial
-            // editor_pre.style.position = 'initial'
             editor_pre.style.height = '100%'
             editor_pre.style.overflow = 'hidden'
             editor_pre.style.margin = '0'
@@ -111,14 +105,11 @@ export class GlslEditorACE {
                 mode: "ace/mode/glsl",
                 selectionStyle: "text",
                 showPrintMargin: false,
-                hasCssTransforms: true
+                hasCssTransforms: true,
+                highlightActiveLine: false,
+                // enableBasicAutocompletion: true,
             });
-
-            // editor.setOptions({
-            //     enableBasicAutocompletion: true,
-            //     // enableLiveAutocompletion: true
-            // })
-
+            
             // let lygiaCompleter = getLygiaCompleter();
             // if (lygiaCompleter) {
             //     langTools.addCompleter(lygiaCompleter);

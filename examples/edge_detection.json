@@ -1,6 +1,6 @@
 {
-  "last_node_id": 20,
-  "last_link_id": 21,
+  "last_node_id": 21,
+  "last_link_id": 22,
   "nodes": [
     {
       "id": 11,
@@ -59,7 +59,7 @@
         {
           "name": "fragment_code",
           "type": "GLSL_CODE",
-          "link": 19
+          "link": 22
         },
         {
           "name": "u_tex0",
@@ -125,15 +125,15 @@
       }
     },
     {
-      "id": 15,
-      "type": "glslEditor",
+      "id": 21,
+      "type": "glslEditorPro",
       "pos": [
-        550,
-        140
+        514,
+        148
       ],
       "size": {
-        "0": 656.2028198242188,
-        "1": 501.90106201171875
+        "0": 692.40283203125,
+        "1": 628.6910400390625
       },
       "flags": {},
       "order": 1,
@@ -143,31 +143,24 @@
           "name": "GLSL_CODE",
           "type": "GLSL_CODE",
           "links": [
-            19
+            22
           ],
           "shape": 3,
           "slot_index": 0
         }
       ],
       "properties": {
-        "Node name for S&R": "glslEditor"
+        "Node name for S&R": "glslEditorPro"
       },
       "widgets_values": [
-        "130",
+        "120",
+        "fragment",
         "uniform sampler2D u_tex0;\n\nuniform vec2    u_resolution;\nuniform float   u_time;\nuniform float   u_fps;\nuniform int     u_frame;\n\n#include \"lygia/math/saturate.glsl\"\n#include \"lygia/sample/clamp2edge.glsl\"\n#define EDGE_SAMPLER_FNC(TEX, UV) sampleClamp2edge(TEX, UV).r\n#include \"lygia/filter/edge.glsl\"\n#include \"lygia/draw/digits.glsl\"\n\nvoid main() {\n    vec4 color = vec4(0.0, 0.0, 0.0, 1.0);\n    vec2 pixel = 1.0 / u_resolution;\n    vec2 st = gl_FragCoord.xy * pixel;\n\n    float ix = floor(st.x * 5.0);\n    float radius = max(0.1, ix * 0.5);\n\n    if (st.y < 0.5)\n        color.rgb += edgePrewitt(u_tex0, st, pixel * radius);\n    else\n        color.rgb += edgeSobel(u_tex0, st, pixel * radius);\n\n    color.rgb -= step(st.y, 0.05) * 0.5;\n    color = saturate(color);\n    color.rgb += digits(st - vec2(ix/5.0 + 0.01, 0.01), radius);\n    color.rgb -= step(.98, fract(st.x * 5.0));\n\n    gl_FragColor = color;\n}\n",
-        "fragment"
+        null
       ]
     }
   ],
   "links": [
-    [
-      19,
-      15,
-      0,
-      19,
-      0,
-      "GLSL_CODE"
-    ],
     [
       20,
       11,
@@ -183,16 +176,24 @@
       17,
       0,
       "IMAGE"
+    ],
+    [
+      22,
+      21,
+      0,
+      19,
+      0,
+      "GLSL_CODE"
     ]
   ],
   "groups": [],
   "config": {},
   "extra": {
     "ds": {
-      "scale": 0.9090909090909091,
+      "scale": 1.2100000000000006,
       "offset": {
-        "0": 65.19717407226565,
-        "1": 37.19895172119126
+        "0": -104.62416326808027,
+        "1": -11.438914544774295
       }
     }
   },

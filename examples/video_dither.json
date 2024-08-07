@@ -1,6 +1,6 @@
 {
-  "last_node_id": 35,
-  "last_link_id": 74,
+  "last_node_id": 36,
+  "last_link_id": 75,
   "nodes": [
     {
       "id": 32,
@@ -20,7 +20,7 @@
         {
           "name": "fragment_code",
           "type": "GLSL_CODE",
-          "link": 61
+          "link": 75
         },
         {
           "name": "uniforms",
@@ -312,15 +312,15 @@
       }
     },
     {
-      "id": 15,
-      "type": "glslEditor",
+      "id": 36,
+      "type": "glslEditorPro",
       "pos": [
-        305,
-        333
+        308,
+        332
       ],
       "size": [
-        631.9811344853491,
-        595.6500555972954
+        624.1411344853491,
+        669.1290482120415
       ],
       "flags": {},
       "order": 1,
@@ -330,31 +330,32 @@
           "name": "GLSL_CODE",
           "type": "GLSL_CODE",
           "links": [
-            61
+            75
           ],
           "shape": 3,
           "slot_index": 0
         }
       ],
       "properties": {
-        "Node name for S&R": "glslEditor"
+        "Node name for S&R": "glslEditorPro"
       },
       "widgets_values": [
         "130",
+        "fragment",
         "// <NAME>_TYPE: have the uniform type\nuniform U_TEX0_TYPE u_tex0;\n\nuniform vec4    u_date;\nuniform vec2    u_resolution;\nuniform float   u_delta;\nuniform float   u_time;\nuniform float   u_fps;\nuniform int     u_frame;\n\n// This overwrites all LYGIA sampling functions\n#define SAMPLER_TYPE U_TEX0_TYPE\n#define SAMPLER_FNC(TEX, UV) sampleTexture(TEX, UV)\nvec4 sampleTexture(U_TEX0_TYPE tex, vec2 st) {\n    #ifdef U_TEX0_TOTALFRAMES\n    return texture(tex, vec3(st, float(u_frame)));\n    #else\n    return texture(tex, st);\n    #endif\n}\n\n// Lets load some dithering functions\n#define DITHER_PRECISION 4\n#define SAMPLEDITHER_FNC ditherBayer\n#include \"lygia/math/decimate.glsl\"\n#include \"lygia/color/luma.glsl\"\n#include \"lygia/sample/dither.glsl\"\n\nvoid main() {\n    vec4 color = vec4(0.0, 0.0, 0.0, 1.0);\n    vec2 pixel = 1.0 / u_resolution;\n    vec2 st = gl_FragCoord.xy * pixel;\n\n    color = sampleDither(u_tex0, st, u_resolution * 0.25);\n    color.rgb = vec3(luma(color.rgb));\n\n    gl_FragColor = color;\n}\n",
-        "fragment"
+        null
       ]
     },
     {
       "id": 26,
       "type": "VHS_VideoCombine",
       "pos": [
-        957,
-        261
+        967,
+        263
       ],
       "size": [
-        751.961134485349,
-        663.7281494140625
+        917.2311344853488,
+        756.6925048828125
       ],
       "flags": {},
       "order": 5,
@@ -403,7 +404,7 @@
           "hidden": false,
           "paused": false,
           "params": {
-            "filename": "AnimateDiff_00083.gif",
+            "filename": "AnimateDiff_00035.gif",
             "subfolder": "",
             "type": "output",
             "format": "image/gif",
@@ -455,14 +456,6 @@
       "IMAGE"
     ],
     [
-      61,
-      15,
-      0,
-      32,
-      0,
-      "GLSL_CODE"
-    ],
-    [
       73,
       35,
       0,
@@ -477,16 +470,24 @@
       35,
       0,
       "*"
+    ],
+    [
+      75,
+      36,
+      0,
+      32,
+      0,
+      "GLSL_CODE"
     ]
   ],
   "groups": [],
   "config": {},
   "extra": {
     "ds": {
-      "scale": 0.8264462809917354,
+      "scale": 1,
       "offset": {
-        "0": 81.83886551465108,
-        "1": 101.05994440270472
+        "0": 0.7688655146512247,
+        "1": 1.7099444027045365
       }
     }
   },

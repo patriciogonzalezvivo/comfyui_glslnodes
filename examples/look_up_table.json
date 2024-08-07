@@ -1,6 +1,6 @@
 {
-  "last_node_id": 19,
-  "last_link_id": 22,
+  "last_node_id": 20,
+  "last_link_id": 23,
   "nodes": [
     {
       "id": 11,
@@ -98,7 +98,7 @@
         {
           "name": "fragment_code",
           "type": "GLSL_CODE",
-          "link": 22
+          "link": 23
         },
         {
           "name": "u_tex0",
@@ -169,15 +169,15 @@
       }
     },
     {
-      "id": 15,
-      "type": "glslEditor",
+      "id": 20,
+      "type": "glslEditorPro",
       "pos": [
-        430,
-        80
+        413,
+        92
       ],
       "size": {
-        "0": 656.2028198242188,
-        "1": 501.90106201171875
+        "0": 698.90283203125,
+        "1": 617.6555786132812
       },
       "flags": {},
       "order": 2,
@@ -187,19 +187,20 @@
           "name": "GLSL_CODE",
           "type": "GLSL_CODE",
           "links": [
-            22
+            23
           ],
           "shape": 3,
           "slot_index": 0
         }
       ],
       "properties": {
-        "Node name for S&R": "glslEditor"
+        "Node name for S&R": "glslEditorPro"
       },
       "widgets_values": [
-        "130",
+        "120",
+        "fragment",
         "uniform sampler2D u_tex0;\nuniform sampler2D u_tex1;\n\nuniform vec2    u_resolution;\nuniform float   u_time;\nuniform float   u_fps;\nuniform int     u_frame;\n\n#define LUT_SQUARE\n#include \"lygia/color/lut.glsl\"\n\nvoid main() {\n    vec4 color = vec4(0.0, 0.0, 0.0, 1.0);\n    vec2 pixel = 1.0 / u_resolution;\n    vec2 st = gl_FragCoord.xy * pixel;\n\n    color = texture2D(u_tex0, st);\n    color = lut(u_tex1, color);\n\n    gl_FragColor = color;\n}\n",
-        "fragment"
+        null
       ]
     }
   ],
@@ -229,8 +230,8 @@
       "IMAGE"
     ],
     [
-      22,
-      15,
+      23,
+      20,
       0,
       19,
       0,
@@ -243,8 +244,8 @@
     "ds": {
       "scale": 1,
       "offset": {
-        "0": 361.0971740722656,
-        "1": 86.24440626664591
+        "0": 11.097174072265602,
+        "1": 20.24440626664591
       }
     }
   },

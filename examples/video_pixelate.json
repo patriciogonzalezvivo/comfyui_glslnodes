@@ -1,100 +1,105 @@
 {
-  "last_node_id": 35,
-  "last_link_id": 74,
+  "last_node_id": 36,
+  "last_link_id": 75,
   "nodes": [
     {
-      "id": 32,
-      "type": "glslViewer",
+      "id": 10,
+      "type": "VHS_LoadVideo",
       "pos": [
-        1110,
-        50
+        38,
+        61
       ],
-      "size": {
-        "0": 210,
-        "1": 158
-      },
+      "size": [
+        235.1999969482422,
+        397.04999828338623
+      ],
       "flags": {},
-      "order": 4,
+      "order": 0,
       "mode": 0,
       "inputs": [
         {
-          "name": "fragment_code",
-          "type": "GLSL_CODE",
-          "link": 61
+          "name": "meta_batch",
+          "type": "VHS_BatchManager",
+          "link": null
         },
         {
-          "name": "uniforms",
-          "type": "GLSL_CONTEXT",
-          "link": 73
-        },
-        {
-          "name": "width",
-          "type": "INT",
-          "link": 58,
-          "widget": {
-            "name": "width"
-          }
-        },
-        {
-          "name": "height",
-          "type": "INT",
-          "link": 59,
-          "widget": {
-            "name": "height"
-          }
-        },
-        {
-          "name": "frames",
-          "type": "INT",
-          "link": 57,
-          "widget": {
-            "name": "frames"
-          }
-        },
-        {
-          "name": "...",
-          "type": "*",
+          "name": "vae",
+          "type": "VAE",
           "link": null
         }
       ],
       "outputs": [
         {
-          "name": "images",
+          "name": "IMAGE",
           "type": "IMAGE",
           "links": [
-            60
+            74
           ],
           "shape": 3,
           "slot_index": 0
         },
         {
-          "name": "mask",
-          "type": "MASK",
+          "name": "frame_count",
+          "type": "INT",
+          "links": [],
+          "shape": 3,
+          "slot_index": 1
+        },
+        {
+          "name": "audio",
+          "type": "AUDIO",
           "links": null,
           "shape": 3
+        },
+        {
+          "name": "video_info",
+          "type": "VHS_VIDEOINFO",
+          "links": [
+            48
+          ],
+          "shape": 3,
+          "slot_index": 3
         }
       ],
       "properties": {
-        "Node name for S&R": "glslViewer"
+        "Node name for S&R": "VHS_LoadVideo"
       },
-      "widgets_values": [
-        512,
-        512,
-        1,
-        30
-      ]
+      "widgets_values": {
+        "video": "blade_runner_003.mp4",
+        "force_rate": 24,
+        "force_size": "Disabled",
+        "custom_width": 512,
+        "custom_height": 512,
+        "frame_load_cap": 0,
+        "skip_first_frames": 0,
+        "select_every_nth": 1,
+        "choose video to upload": "image",
+        "videopreview": {
+          "hidden": false,
+          "paused": false,
+          "params": {
+            "frame_load_cap": 0,
+            "skip_first_frames": 0,
+            "force_rate": 24,
+            "select_every_nth": 1,
+            "filename": "blade_runner_003.mp4",
+            "type": "input",
+            "format": "video/mp4"
+          }
+        }
+      }
     },
     {
       "id": 27,
       "type": "VHS_VideoInfo",
       "pos": [
-        319,
-        70
+        295,
+        63
       ],
-      "size": {
-        "0": 393,
-        "1": 206
-      },
+      "size": [
+        262,
+        222.0434500896257
+      ],
       "flags": {},
       "order": 3,
       "mode": 0,
@@ -187,8 +192,8 @@
       "id": 35,
       "type": "glslUniforms",
       "pos": [
-        823,
-        73
+        578,
+        68
       ],
       "size": {
         "0": 140,
@@ -225,15 +230,132 @@
       }
     },
     {
+      "id": 32,
+      "type": "glslViewer",
+      "pos": [
+        746,
+        65
+      ],
+      "size": {
+        "0": 210,
+        "1": 158
+      },
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "fragment_code",
+          "type": "GLSL_CODE",
+          "link": 75
+        },
+        {
+          "name": "uniforms",
+          "type": "GLSL_CONTEXT",
+          "link": 73
+        },
+        {
+          "name": "width",
+          "type": "INT",
+          "link": 58,
+          "widget": {
+            "name": "width"
+          }
+        },
+        {
+          "name": "height",
+          "type": "INT",
+          "link": 59,
+          "widget": {
+            "name": "height"
+          }
+        },
+        {
+          "name": "frames",
+          "type": "INT",
+          "link": 57,
+          "widget": {
+            "name": "frames"
+          }
+        },
+        {
+          "name": "...",
+          "type": "*",
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "links": [
+            60
+          ],
+          "shape": 3,
+          "slot_index": 0
+        },
+        {
+          "name": "mask",
+          "type": "MASK",
+          "links": null,
+          "shape": 3
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "glslViewer"
+      },
+      "widgets_values": [
+        512,
+        512,
+        1,
+        30
+      ]
+    },
+    {
+      "id": 36,
+      "type": "glslEditorPro",
+      "pos": [
+        283,
+        326
+      ],
+      "size": [
+        673.3074065979099,
+        558.7707228168985
+      ],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "GLSL_CODE",
+          "type": "GLSL_CODE",
+          "links": [
+            75
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "glslEditorPro"
+      },
+      "widgets_values": [
+        "130",
+        "fragment",
+        "// <NAME>_TYPE: have the uniform type\nuniform U_TEX0_TYPE u_tex0;\nuniform vec2    u_tex0Resolution;\n\nuniform vec4    u_date;\nuniform vec2    u_resolution;\nuniform float   u_delta;\nuniform float   u_time;\nuniform float   u_fps;\nuniform int     u_frame;\n\n// This overwrites all LYGIA sampling functions\n#define SAMPLER_TYPE U_TEX0_TYPE\n#define SAMPLER_FNC(TEX, UV) sampleTexture(TEX, UV)\nvec4 sampleTexture(U_TEX0_TYPE tex, vec2 st) {\n    #ifdef U_TEX0_TOTALFRAMES\n    return texture(tex, vec3(st, float(u_frame)));\n    #else\n    return texture(tex, st);\n    #endif\n}\n\n#include \"lygia/math/decimate.glsl\"\n#include \"lygia/sample/nearest.glsl\"\n\nvoid main() {\n    vec4 color = vec4(0.0, 0.0, 0.0, 1.0);\n    vec2 pixel = 1.0 / u_resolution;\n    vec2 st = gl_FragCoord.xy * pixel;\n   \n    float aspect = u_tex0Resolution.y / u_tex0Resolution.x;\n    float res = 50.0;\n\n    st = decimate(st, vec2(res, res * aspect)) + 0.5/res;\n    color = sampleNearest(u_tex0, st, u_tex0Resolution);\n\n    gl_FragColor = color;\n}\n",
+        null
+      ]
+    },
+    {
       "id": 26,
       "type": "VHS_VideoCombine",
       "pos": [
-        957,
-        261
+        973,
+        69
       ],
       "size": [
-        751.9611206054688,
-        663.7281303405762
+        739.6710429615462,
+        699.4070864532621
       ],
       "flags": {},
       "order": 5,
@@ -282,7 +404,7 @@
           "hidden": false,
           "paused": false,
           "params": {
-            "filename": "AnimateDiff_00121.gif",
+            "filename": "AnimateDiff_00036.gif",
             "subfolder": "",
             "type": "output",
             "format": "image/gif",
@@ -290,127 +412,6 @@
           }
         }
       }
-    },
-    {
-      "id": 10,
-      "type": "VHS_LoadVideo",
-      "pos": [
-        38,
-        61
-      ],
-      "size": [
-        235.1999969482422,
-        397.04999828338623
-      ],
-      "flags": {},
-      "order": 0,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "meta_batch",
-          "type": "VHS_BatchManager",
-          "link": null
-        },
-        {
-          "name": "vae",
-          "type": "VAE",
-          "link": null
-        }
-      ],
-      "outputs": [
-        {
-          "name": "IMAGE",
-          "type": "IMAGE",
-          "links": [
-            74
-          ],
-          "shape": 3,
-          "slot_index": 0
-        },
-        {
-          "name": "frame_count",
-          "type": "INT",
-          "links": [],
-          "shape": 3,
-          "slot_index": 1
-        },
-        {
-          "name": "audio",
-          "type": "AUDIO",
-          "links": null,
-          "shape": 3
-        },
-        {
-          "name": "video_info",
-          "type": "VHS_VIDEOINFO",
-          "links": [
-            48
-          ],
-          "shape": 3,
-          "slot_index": 3
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "VHS_LoadVideo"
-      },
-      "widgets_values": {
-        "video": "blade_runner_003.mp4",
-        "force_rate": 24,
-        "force_size": "Disabled",
-        "custom_width": 512,
-        "custom_height": 512,
-        "frame_load_cap": 0,
-        "skip_first_frames": 0,
-        "select_every_nth": 1,
-        "choose video to upload": "image",
-        "videopreview": {
-          "hidden": false,
-          "paused": false,
-          "params": {
-            "frame_load_cap": 0,
-            "skip_first_frames": 0,
-            "force_rate": 24,
-            "select_every_nth": 1,
-            "filename": "blade_runner_003.mp4",
-            "type": "input",
-            "format": "video/mp4"
-          }
-        }
-      }
-    },
-    {
-      "id": 15,
-      "type": "glslEditor",
-      "pos": [
-        305,
-        333
-      ],
-      "size": {
-        "0": 631.9811401367188,
-        "1": 595.6500854492188
-      },
-      "flags": {},
-      "order": 1,
-      "mode": 0,
-      "outputs": [
-        {
-          "name": "GLSL_CODE",
-          "type": "GLSL_CODE",
-          "links": [
-            61
-          ],
-          "shape": 3,
-          "slot_index": 0
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "glslEditor"
-      },
-      "widgets_values": [
-        "130",
-        "// <NAME>_TYPE: have the uniform type\nuniform U_TEX0_TYPE u_tex0;\nuniform vec2    u_tex0Resolution;\n\nuniform vec4    u_date;\nuniform vec2    u_resolution;\nuniform float   u_delta;\nuniform float   u_time;\nuniform float   u_fps;\nuniform int     u_frame;\n\n// This overwrites all LYGIA sampling functions\n#define SAMPLER_TYPE U_TEX0_TYPE\n#define SAMPLER_FNC(TEX, UV) sampleTexture(TEX, UV)\nvec4 sampleTexture(U_TEX0_TYPE tex, vec2 st) {\n    #ifdef U_TEX0_TOTALFRAMES\n    return texture(tex, vec3(st, float(u_frame)));\n    #else\n    return texture(tex, st);\n    #endif\n}\n\n#include \"lygia/math/decimate.glsl\"\n#include \"lygia/sample/nearest.glsl\"\n\nvoid main() {\n    vec4 color = vec4(0.0, 0.0, 0.0, 1.0);\n    vec2 pixel = 1.0 / u_resolution;\n    vec2 st = gl_FragCoord.xy * pixel;\n   \n    float aspect = u_tex0Resolution.y / u_tex0Resolution.x;\n    float res = 50.0;\n\n    st = decimate(st, vec2(res, res * aspect)) + 0.5/res;\n    color = sampleNearest(u_tex0, st, u_tex0Resolution);\n\n    gl_FragColor = color;\n}\n",
-        "fragment"
-      ]
     }
   ],
   "links": [
@@ -455,14 +456,6 @@
       "IMAGE"
     ],
     [
-      61,
-      15,
-      0,
-      32,
-      0,
-      "GLSL_CODE"
-    ],
-    [
       73,
       35,
       0,
@@ -477,16 +470,24 @@
       35,
       0,
       "*"
+    ],
+    [
+      75,
+      36,
+      0,
+      32,
+      0,
+      "GLSL_CODE"
     ]
   ],
   "groups": [],
   "config": {},
   "extra": {
     "ds": {
-      "scale": 1,
+      "scale": 1.1,
       "offset": {
-        "0": 38.23804794754483,
-        "1": 37.22927163445098
+        "0": 14.601684311180747,
+        "1": 24.22927163445097
       }
     }
   },

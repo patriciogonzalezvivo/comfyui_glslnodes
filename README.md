@@ -27,11 +27,16 @@ https://github.com/user-attachments/assets/1f2a230d-b703-4889-b3b5-659855444366
 
 `examples/video_dither.json`
 
-https://github.com/user-attachments/assets/21537547-2ff4-45b1-8828-287d91a47774
+https://github.com/user-attachments/assets/1d98caf2-347b-40c1-8442-2c72bb86a940
+
+`examples/video_pixelate.json`
+
+https://github.com/user-attachments/assets/89deee89-db13-4cfa-8a96-2e82f5ff6ca2
 
 `examples/shadertoy.json`
 
-https://github.com/user-attachments/assets/3e0f9dc7-1e30-4c55-95ce-45757596a977
+https://github.com/user-attachments/assets/c6a66d8f-34cb-4ff6-b879-ee13e9e856d0
+
 
 Features:
 

@@ -1,25 +1,4 @@
-from .glsl_utils import resolveLygia, GLSL_VERSIONS, DEFAULT_FRAGMENT_SHADER, DEFAULT_SHADERTOY_SHADER
-
-
-class GlslShaderToy:
-    @classmethod
-    def INPUT_TYPES(cls):
-        return {
-            "required": {
-                "code": ("STRING", {"multiline": True, "default": DEFAULT_SHADERTOY_SHADER}),
-            },
-        }
-    CATEGORY = "GLSL"
-    FUNCTION = "main"
-    RETURN_TYPES = ("GLSL_CODE", )
-
-    def main(self, code):
-        out = {}
-        out["version"] = "440"
-        out["type"] = "fragment"
-        out["src"] = resolveLygia(code)
-        out["specs"] = "shadertoy"
-        return (out, )
+from .glsl_utils import resolveLygia, GLSL_VERSIONS, SHADER_TYPES, DEFAULT_FRAGMENT_SHADER, DEFAULT_SHADERTOY_SHADER
 
 
 class GlslEditor:
@@ -29,7 +8,7 @@ class GlslEditor:
             "required": {
                 "version" : (GLSL_VERSIONS, {"default": "130" }),
                 "code": ("STRING", {"multiline": True, "default": DEFAULT_FRAGMENT_SHADER}),
-                "type": (["fragment"], { "default": "fragment" }),
+                "type": (SHADER_TYPES, { "default": "fragment" }),
             },
         }
     CATEGORY = "GLSL"
@@ -38,11 +17,19 @@ class GlslEditor:
 
     def main(self, version, type, code):
         out = {}
-        out["version"] = version
-        out["type"] = type
-        out["src"] = resolveLygia(code)
-        out["specs"] = "raw"
-        return (out, )
+
+        if type == "fragment (shadertoy)":
+            out["version"] = "440"
+            out["type"] = "fragment"
+            out["src"] = resolveLygia(code)
+            out["specs"] = "shadertoy"
+            return (out, )
+        else:
+            out["version"] = version
+            out["type"] = type
+            out["src"] = resolveLygia(code)
+            out["specs"] = "raw"
+            return (out, )
     
 
 class GlslEditorPro:
@@ -51,7 +38,7 @@ class GlslEditorPro:
         return {
             "required": {
                 "version" : (GLSL_VERSIONS, {"default": "130" }),
-                "type": (["fragment"], { "default": "fragment" }),
+                "type": (SHADER_TYPES, { "default": "fragment" }),
                 "code": ("GLSL_STRING", {"default": DEFAULT_FRAGMENT_SHADER}),
             },
         }
@@ -59,10 +46,18 @@ class GlslEditorPro:
     FUNCTION = "main"
     RETURN_TYPES = ("GLSL_CODE", )
 
-    def main(self, **kwargs):
+    def main(self, version, type, code):
         out = {}
-        out["version"] = kwargs["version"]
-        out["type"] = kwargs["type"]
-        out["src"] = resolveLygia( kwargs["code"] )
-        out["specs"] = "raw"
-        return (out, )
+
+        if type == "fragment (shadertoy)":
+            out["version"] = "440"
+            out["type"] = "fragment"
+            out["src"] = resolveLygia(code)
+            out["specs"] = "shadertoy"
+            return (out, )
+        else:
+            out["version"] = version
+            out["type"] = type
+            out["src"] = resolveLygia(code)
+            out["specs"] = "raw"
+            return (out, )

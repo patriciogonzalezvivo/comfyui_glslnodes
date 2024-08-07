@@ -1,5 +1,6 @@
 import { app } from "../../../scripts/app.js"
 import { load_glslnode_css } from "./nodescss.js"
+import { getJSON } from "./utils.js"
 
 const glslnodes_root = "/extensions/comfyui_glslnodes/"
 
@@ -9,27 +10,11 @@ export const init_editor = async () => {
     // so we rename them to .js_ and map the features here
     const features = [
         "mode/glsl", "mode-glsl.js_",
+        "theme/tomorrow_night_bright", "theme-tomorrow_night_bright.js_",
+        "keyboard/vscode", "keybinding-vscode.js_",
+        "ext/language_tools", "ext-language_tools.js_",
+        "ext/inline_auto_complete", "ext-inline_auto_complete.js_",
     ]
-
-    const ace_keyboards = [
-        "vim", "emacs", "sublime", "vscode"
-    ]
-
-    const ace_themes = [
-        "tomorrow_night_bright"
-    ]
-  
-    ace_keyboards.forEach((keyboard) => {
-        if (keyboard !== 'ace') {
-            features.push(`keyboard/${keyboard}`)
-            features.push(`keybinding-${keyboard}.js_`)
-        }
-    })
-  
-    ace_themes.forEach((theme) => {
-        features.push(`theme/${theme}`)
-        features.push(`theme-${theme}.js_`)
-    })
     
     for (let i = 0; i < features.length; i += 2) {
         const feature = features[i]
@@ -39,15 +24,49 @@ export const init_editor = async () => {
         const blob = new Blob([text], { type: `application/javascript` })
         const url = URL.createObjectURL(blob)
         ace.config.setModuleUrl(`ace/${feature}`, url)
-        console.log(`ace.config.setModuleUrl("ace/${feature}", ${url})`)
     }
 }
+
+const getLygiaCompleter = () => {
+    getJSON('https://lygia.xyz/glsl.json', (err, data) => {
+        if (err)
+            return
+
+        let lygiaFiles = [];
+
+        for (let i = 0; i < data.length; i++) {
+            const file = data[i];
+            lygiaFiles.push({
+                name: file,
+                value: file,
+                score: 300,
+                meta: "lygia"
+            })
+        }
+        
+        return {
+            getCompletions: (editor, session, pos, prefix, callback) => {
+                if (prefix.length === 0) {
+                    callback(null, []);
+                    return
+                }
+                // console.log(pos, session.getTokenAt(pos.row, pos.column));
+                callback(null, wordList.map(function(ea) {
+                    // console.log(ea);
+                    return ea;
+                }))
+            }
+        };
+    });
+
+    return null;
+}
+
 
 export class GlslEditorACE {
     static i_editor = 0
     constructor(...args) {
         const [inputName, opts] = args
-        console.log('GlslEditorACE', opts)
         this.name = inputName
         this.type = opts[0]
         this.options = opts[1]
@@ -84,15 +103,26 @@ export class GlslEditorACE {
             
             div_widget.glslnode_div = glslnode_div
             div_widget.editor_pre = editor_pre
-            
-            const editor = ace.edit(editor_id, {
+
+            // let langTools = ace.require("ace/ext/language_tools");
+            let editor = ace.edit(editor_id, {
                 keyboardHandler: 'ace/keyboard/vscode',
                 theme: "ace/theme/tomorrow_night_bright",
                 mode: "ace/mode/glsl",
                 selectionStyle: "text",
                 showPrintMargin: false,
-                hasCssTransforms: true,
-            })
+                hasCssTransforms: true
+            });
+
+            // editor.setOptions({
+            //     enableBasicAutocompletion: true,
+            //     // enableLiveAutocompletion: true
+            // })
+
+            // let lygiaCompleter = getLygiaCompleter();
+            // if (lygiaCompleter) {
+            //     langTools.addCompleter(lygiaCompleter);
+            // }
 
             editor.on('change', () => {
                 this.value = editor.getValue();

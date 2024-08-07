@@ -5,7 +5,7 @@
 @description: A set of nodes to work with GLSL shaders
 """
 
-from .glsl_editors import GlslEditor, GlslEditorPro, GlslShaderToy
+from .glsl_editors import GlslEditor, GlslEditorPro
 from .glsl_uniforms import GlslUniforms
 from .glsl_viewer import GlslViewer
 from .glsl_types import *
@@ -25,7 +25,6 @@ NODE_CLASS_MAPPINGS = {
     'glslViewer': GlslViewer,
     'glslEditor': GlslEditor,
     'glslEditorPro': GlslEditorPro,
-    'glslEditor (ShaderToy)': GlslShaderToy,
 }
 
 WEB_DIRECTORY = "./web"

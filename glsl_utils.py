@@ -14,6 +14,8 @@ GL_PLATFORMS = {
 
 GLSL_VERSIONS = ["100", "120", "130", "140", "150", "330", "330 core", "400", "410", "420", "430", "440"]
 
+SHADER_TYPES = ["fragment", "fragment (shadertoy)"]
+
 GLSL_FRAGMENT_HEADER = """
 #if __VERSION__ >= 130
 out vec4 fragColor;

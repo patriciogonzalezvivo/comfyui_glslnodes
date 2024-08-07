@@ -309,7 +309,7 @@
         "Node name for S&R": "glslEditorPro"
       },
       "widgets_values": [
-        "130",
+        "140",
         "fragment",
         "// User defined uniforms\n//\nuniform sampler2D u_tex0; // color\nuniform sampler2D u_tex1; // depth\nuniform vec2    u_val0; // focus point\nuniform float   u_val1; // amount\n\n// Native uniforms\n//\nuniform vec2    u_resolution;\nuniform float   u_time;\nuniform float   u_fps;\nuniform int     u_frame;\n\n#include \"lygia/color/contrast.glsl\"\n#include \"lygia/color/space/gamma2linear.glsl\"\n#include \"lygia/math/map.glsl\"\n#include \"lygia/sample/clamp2edge.glsl\"\n\n#define RESOLUTION u_resolution\n\n// #define BOKEH_DEBUG\n#define SAMPLEDOF_BLUR_SIZE 12.0\n#define SAMPLEDOF_RAD_SCALE 2.0\n#define SAMPLEDOF_COLOR_SAMPLE_FNC(TEX, UV) sampleClamp2edge(TEX,UV).rgb\n#define SAMPLEDOF_DEPTH_SAMPLE_FNC(TEX, UV) (gamma2linear( 1.0-sampleClamp2edge(TEX,UV).r ))\n#include \"lygia/sample/dof.glsl\"\n\nvoid main() {\n    vec4 color = vec4(0.0, 0.0, 0.0, 1.0);\n    vec2 pixel = 1.0 / u_resolution;\n    vec2 st = gl_FragCoord.xy * pixel;\n\n    float fp = SAMPLEDOF_DEPTH_SAMPLE_FNC(u_tex1, u_val0);\n    color.rgb = sampleDoF(u_tex0, u_tex1, st, fp, u_val1);\n\n    gl_FragColor = color;\n}\n",
         null

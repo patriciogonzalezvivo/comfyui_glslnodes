@@ -340,7 +340,7 @@
         "Node name for S&R": "glslEditorPro"
       },
       "widgets_values": [
-        "130",
+        "140",
         "fragment",
         "// <NAME>_TYPE: have the uniform type\nuniform U_TEX0_TYPE u_tex0;\n\nuniform vec4    u_date;\nuniform vec2    u_resolution;\nuniform float   u_delta;\nuniform float   u_time;\nuniform float   u_fps;\nuniform int     u_frame;\n\n// This overwrites all LYGIA sampling functions\n#define SAMPLER_TYPE U_TEX0_TYPE\n#define SAMPLER_FNC(TEX, UV) sampleTexture(TEX, UV)\nvec4 sampleTexture(U_TEX0_TYPE tex, vec2 st) {\n    #ifdef U_TEX0_TOTALFRAMES\n    return texture(tex, vec3(st, float(u_frame)));\n    #else\n    return texture(tex, st);\n    #endif\n}\n\n// Lets load some dithering functions\n#define DITHER_PRECISION 4\n#define SAMPLEDITHER_FNC ditherBayer\n#include \"lygia/math/decimate.glsl\"\n#include \"lygia/color/luma.glsl\"\n#include \"lygia/sample/dither.glsl\"\n\nvoid main() {\n    vec4 color = vec4(0.0, 0.0, 0.0, 1.0);\n    vec2 pixel = 1.0 / u_resolution;\n    vec2 st = gl_FragCoord.xy * pixel;\n\n    color = sampleDither(u_tex0, st, u_resolution * 0.25);\n    color.rgb = vec3(luma(color.rgb));\n\n    gl_FragColor = color;\n}\n",
         null

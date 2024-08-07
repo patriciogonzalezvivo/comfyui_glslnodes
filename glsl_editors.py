@@ -6,7 +6,7 @@ class GlslEditor:
     def INPUT_TYPES(cls):
         return {
             "required": {
-                "version" : (GLSL_VERSIONS, {"default": "130" }),
+                "version" : (GLSL_VERSIONS, {"default": "140" }),
                 "code": ("STRING", {"multiline": True, "default": DEFAULT_FRAGMENT_SHADER}),
                 "type": (SHADER_TYPES, { "default": "fragment" }),
             },
@@ -19,7 +19,7 @@ class GlslEditor:
         out = {}
 
         if type == "fragment (shadertoy)":
-            out["version"] = "440"
+            out["version"] = "400"
             out["type"] = "fragment"
             out["src"] = resolveLygia(code)
             out["specs"] = "shadertoy"
@@ -37,7 +37,7 @@ class GlslEditorPro:
     def INPUT_TYPES(cls):
         return {
             "required": {
-                "version" : (GLSL_VERSIONS, {"default": "130" }),
+                "version" : (GLSL_VERSIONS, {"default": "140" }),
                 "type": (SHADER_TYPES, { "default": "fragment" }),
                 "code": ("GLSL_STRING", {"default": DEFAULT_FRAGMENT_SHADER}),
             },
@@ -50,7 +50,7 @@ class GlslEditorPro:
         out = {}
 
         if type == "fragment (shadertoy)":
-            out["version"] = "440"
+            out["version"] = "400"
             out["type"] = "fragment"
             out["src"] = resolveLygia(code)
             out["specs"] = "shadertoy"

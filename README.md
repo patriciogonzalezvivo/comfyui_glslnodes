@@ -5,16 +5,17 @@ This nodes add support for GLSL shaders on workflows, by adding the following no
 Here some examples:
 
 `examples/types.json`
-![examples/types.json](https://github.com/user-attachments/assets/656038bf-1126-4b29-9148-06e33822394b)
+![types](https://github.com/user-attachments/assets/3eabbc40-094a-4950-b46d-e2b407e2f352)
 
 `examples/depth_of_field.json`
-![examples/depth_of_field.json](https://github.com/user-attachments/assets/5ef20d7b-ac2a-4682-a052-ae8a52c9be84)
+![depth_of_field](https://github.com/user-attachments/assets/fa52dc6d-8202-4bb3-a03d-2e4222a4b203)
 
 `examples/edge_detection.json`
-![examples/edge_detection.json](https://github.com/user-attachments/assets/32e31f24-d988-474f-a0bb-b8599c0babc0)
+![edge_detection](https://github.com/user-attachments/assets/33d13617-8190-4ecb-aa5f-55a7ee93dd1e)
 
 `examples/look_up_table.json`
-![examples/look_up_table.json](https://github.com/user-attachments/assets/41f607fd-1602-4bde-8700-1e039f78f9ee)
+![look_up_table](https://github.com/user-attachments/assets/83d715eb-c843-4fb9-be52-0cd5eeffeeb9)
+
 
 `examples/video_flow.json`
 

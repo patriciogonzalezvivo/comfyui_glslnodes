@@ -1,0 +1,694 @@
+{
+  "last_node_id": 56,
+  "last_link_id": 56,
+  "nodes": [
+    {
+      "id": 40,
+      "type": "glslViewer",
+      "pos": [
+        964,
+        81
+      ],
+      "size": {
+        "0": 210,
+        "1": 170
+      },
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "fragment_code",
+          "type": "GLSL_CODE",
+          "link": 42
+        },
+        {
+          "name": "...",
+          "type": "*",
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "links": [
+            52
+          ],
+          "shape": 3,
+          "slot_index": 0
+        },
+        {
+          "name": "mask",
+          "type": "MASK",
+          "links": [
+            45
+          ],
+          "shape": 3
+        },
+        {
+          "name": "buffers",
+          "type": "GLSL_BUFFERS",
+          "links": [
+            46,
+            48,
+            50
+          ],
+          "shape": 3,
+          "slot_index": 2
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "glslViewer"
+      },
+      "widgets_values": [
+        680,
+        512,
+        120,
+        30
+      ]
+    },
+    {
+      "id": 50,
+      "type": "VHS_VideoCombine",
+      "pos": [
+        1408,
+        49
+      ],
+      "size": [
+        583.3439711790832,
+        676.1648724171921
+      ],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 52
+        },
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "link": null
+        },
+        {
+          "name": "meta_batch",
+          "type": "VHS_BatchManager",
+          "link": null
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Filenames",
+          "type": "VHS_FILENAMES",
+          "links": null,
+          "shape": 3
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VHS_VideoCombine"
+      },
+      "widgets_values": {
+        "frame_rate": 24,
+        "loop_count": 0,
+        "filename_prefix": "AnimateDiff",
+        "format": "image/gif",
+        "pingpong": false,
+        "save_output": false,
+        "videopreview": {
+          "hidden": false,
+          "paused": false,
+          "params": {
+            "filename": "AnimateDiff_00017.gif",
+            "subfolder": "",
+            "type": "temp",
+            "format": "image/gif",
+            "frame_rate": 24
+          }
+        }
+      }
+    },
+    {
+      "id": 38,
+      "type": "MaskToImage",
+      "pos": [
+        970,
+        302
+      ],
+      "size": {
+        "0": 210,
+        "1": 26
+      },
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "mask",
+          "type": "MASK",
+          "link": 45,
+          "slot_index": 0
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            53
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "MaskToImage"
+      }
+    },
+    {
+      "id": 41,
+      "type": "glslBuffers",
+      "pos": [
+        972,
+        380
+      ],
+      "size": {
+        "0": 315,
+        "1": 82
+      },
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "buffers",
+          "type": "GLSL_BUFFERS",
+          "link": 46
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            54
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "glslBuffers"
+      },
+      "widgets_values": [
+        "BUFFER",
+        0
+      ]
+    },
+    {
+      "id": 43,
+      "type": "glslBuffers",
+      "pos": [
+        978,
+        513
+      ],
+      "size": {
+        "0": 315,
+        "1": 82
+      },
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "buffers",
+          "type": "GLSL_BUFFERS",
+          "link": 48
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            55
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "glslBuffers"
+      },
+      "widgets_values": [
+        "BUFFER",
+        1
+      ]
+    },
+    {
+      "id": 48,
+      "type": "glslBuffers",
+      "pos": [
+        980,
+        643
+      ],
+      "size": {
+        "0": 315,
+        "1": 82
+      },
+      "flags": {},
+      "order": 6,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "buffers",
+          "type": "GLSL_BUFFERS",
+          "link": 50
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            56
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "glslBuffers"
+      },
+      "widgets_values": [
+        "BUFFER",
+        2
+      ]
+    },
+    {
+      "id": 51,
+      "type": "VHS_VideoCombine",
+      "pos": [
+        973,
+        783
+      ],
+      "size": [
+        286.3191777906542,
+        452.5226750423749
+      ],
+      "flags": {},
+      "order": 7,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 53
+        },
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "link": null
+        },
+        {
+          "name": "meta_batch",
+          "type": "VHS_BatchManager",
+          "link": null
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Filenames",
+          "type": "VHS_FILENAMES",
+          "links": null,
+          "shape": 3
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VHS_VideoCombine"
+      },
+      "widgets_values": {
+        "frame_rate": 24,
+        "loop_count": 0,
+        "filename_prefix": "AnimateDiff",
+        "format": "image/gif",
+        "pingpong": false,
+        "save_output": false,
+        "videopreview": {
+          "hidden": false,
+          "paused": false,
+          "params": {
+            "filename": "AnimateDiff_00018.gif",
+            "subfolder": "",
+            "type": "temp",
+            "format": "image/gif",
+            "frame_rate": 24
+          }
+        }
+      }
+    },
+    {
+      "id": 52,
+      "type": "VHS_VideoCombine",
+      "pos": [
+        1296,
+        793
+      ],
+      "size": [
+        278.9555414270176,
+        446.97829001563673
+      ],
+      "flags": {},
+      "order": 8,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 54
+        },
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "link": null
+        },
+        {
+          "name": "meta_batch",
+          "type": "VHS_BatchManager",
+          "link": null
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Filenames",
+          "type": "VHS_FILENAMES",
+          "links": null,
+          "shape": 3
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VHS_VideoCombine"
+      },
+      "widgets_values": {
+        "frame_rate": 24,
+        "loop_count": 0,
+        "filename_prefix": "AnimateDiff",
+        "format": "image/gif",
+        "pingpong": false,
+        "save_output": false,
+        "videopreview": {
+          "hidden": false,
+          "paused": false,
+          "params": {
+            "filename": "AnimateDiff_00019.gif",
+            "subfolder": "",
+            "type": "temp",
+            "format": "image/gif",
+            "frame_rate": 24
+          }
+        }
+      }
+    },
+    {
+      "id": 53,
+      "type": "VHS_VideoCombine",
+      "pos": [
+        1610,
+        795
+      ],
+      "size": [
+        271.8398389476786,
+        441.62058461942854
+      ],
+      "flags": {},
+      "order": 9,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 55
+        },
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "link": null
+        },
+        {
+          "name": "meta_batch",
+          "type": "VHS_BatchManager",
+          "link": null
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Filenames",
+          "type": "VHS_FILENAMES",
+          "links": null,
+          "shape": 3
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VHS_VideoCombine"
+      },
+      "widgets_values": {
+        "frame_rate": 24,
+        "loop_count": 0,
+        "filename_prefix": "AnimateDiff",
+        "format": "image/gif",
+        "pingpong": false,
+        "save_output": false,
+        "videopreview": {
+          "hidden": false,
+          "paused": false,
+          "params": {
+            "filename": "AnimateDiff_00020.gif",
+            "subfolder": "",
+            "type": "temp",
+            "format": "image/gif",
+            "frame_rate": 24
+          },
+          "muted": false
+        }
+      }
+    },
+    {
+      "id": 54,
+      "type": "VHS_VideoCombine",
+      "pos": [
+        1914,
+        782
+      ],
+      "size": [
+        292.63322737743056,
+        457.27678296653596
+      ],
+      "flags": {},
+      "order": 10,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 56
+        },
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "link": null
+        },
+        {
+          "name": "meta_batch",
+          "type": "VHS_BatchManager",
+          "link": null
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Filenames",
+          "type": "VHS_FILENAMES",
+          "links": null,
+          "shape": 3
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VHS_VideoCombine"
+      },
+      "widgets_values": {
+        "frame_rate": 24,
+        "loop_count": 0,
+        "filename_prefix": "AnimateDiff",
+        "format": "image/gif",
+        "pingpong": false,
+        "save_output": false,
+        "videopreview": {
+          "hidden": false,
+          "paused": false,
+          "params": {
+            "filename": "AnimateDiff_00021.gif",
+            "subfolder": "",
+            "type": "temp",
+            "format": "image/gif",
+            "frame_rate": 24
+          }
+        }
+      }
+    },
+    {
+      "id": 29,
+      "type": "glslEditorPro",
+      "pos": [
+        -12,
+        25
+      ],
+      "size": {
+        "0": 929.78173828125,
+        "1": 1083.309814453125
+      },
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "GLSL_CODE",
+          "type": "GLSL_CODE",
+          "links": [
+            42
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "glslEditorPro"
+      },
+      "widgets_values": [
+        "140",
+        "fragment",
+        "#ifdef GL_ES\nprecision mediump float;\n#endif\n\nuniform sampler2D   u_buffer0;\nuniform vec2        u_resolution;\nuniform float       u_time;\n\n// SPACE\n#define RESOLUTION  u_resolution\n\n#define RAYMARCH_MULTISAMPLE 4\n#define RAYMARCH_AMBIENT vec3(0.1)\n#define RAYMARCH_BACKGROUND (RAYMARCH_AMBIENT)\n\n#include \"lygia/space/ratio.glsl\"\n#include \"lygia/sdf.glsl\"\n#include \"lygia/math/map.glsl\"\n#include \"lygia/lighting/raymarch.glsl\"\n#include \"lygia/color/space/linear2gamma.glsl\"\n\nfloat checkBoard(vec2 uv, vec2 _scale) {\n    uv = floor(fract(uv * _scale) * 2.0);\n    return min(1.0, uv.x + uv.y) - (uv.x * uv.y);\n}\n\nMaterial raymarchMap( in vec3 pos ) {\n    float check = 0.5 + checkBoard(pos.xz, vec2(1.0, 1.0)) * 0.5;\n    Material res = materialNew(vec3(check), 0.0, 0.5, planeSDF(pos));\n\n    res = opUnion( res, materialNew( vec3(1.0, 1.0, 1.0), 1.0, 0.0, sphereSDF(   pos-vec3( 0.0, 0.60, 0.0), 0.5 ) ) );\n    res = opUnion( res, materialNew( vec3(0.0, 1.0, 1.0), boxSDF(      pos-vec3( 2.0, 0.5, 0.0), vec3(0.4, 0.4, 0.4) ) ) );\n    res = opUnion( res, materialNew( vec3(0.3, 0.3, 1.0), torusSDF(    pos-vec3( 0.0, 0.5, 2.0), vec2(0.4,0.1) ) ) );\n    res = opUnion( res, materialNew( vec3(0.3, 0.1, 0.3), capsuleSDF(  pos,vec3(-2.3, 0.4,-0.2), vec3(-1.6,0.75,0.2), 0.2 ) ) );\n    res = opUnion( res, materialNew( vec3(0.5, 0.3, 0.4), triPrismSDF( pos-vec3(-2.0, 0.50,-2.0), vec2(0.5,0.1) ) ) );\n    res = opUnion( res, materialNew( vec3(0.2, 0.2, 0.8), cylinderSDF( pos-vec3( 2.0, 0.50,-2.0), vec2(0.2,0.4) ) ) );\n    res = opUnion( res, materialNew( vec3(0.7, 0.5, 0.2), coneSDF(     pos-vec3( 0.0, 0.75,-2.0), vec3(0.8,0.6,0.6) ) ) );\n    res = opUnion( res, materialNew( vec3(0.4, 0.2, 0.9), hexPrismSDF( pos-vec3(-2.0, 0.60, 2.0), vec2(0.5,0.1) ) ) );\n    res = opUnion( res, materialNew( vec3(0.1, 0.3, 0.6), pyramidSDF(  pos-vec3( 2.0, 0.10, 2.0), 1.0 ) ) );;\n\n    return res;\n}\n\nvoid main() {\n    vec4 color = vec4(0.0, 0.0, 0.0, 1.0);\n    vec2 pixel = 1.0/u_resolution;\n    vec2 st = gl_FragCoord.xy * pixel;\n    vec2 uv = ratio(st, u_resolution);\n    float time = PI + u_time;\n\n    vec3 cam = vec3( 4.5*cos(0.1*time), 2.2, 4.5*sin(0.1*time) );\n\n    float depth = 0.0;\n    Material mat;\n    \n    color = raymarch(cam, vec3(0.0), uv, mat, depth);\n\n#if defined(BUFFER_0)    \n    color.rgb = vec3( map(depth, length(cam) * 0.5, length(cam) * 3., 1.0, 0.0) );\n    \n#elif defined(BUFFER_1)\n    color.rgb = mat.albedo.rgb;\n    \n#elif defined(BUFFER_2)\n    color.rgb = mat.normal * 0.5 + 0.5;\n    \n#elif defined(BUFFER_3)\n    color.rgb = mat.position;\n    \n    \n#else\n    color = linear2gamma(color);\n    \n#endif\n\n    gl_FragColor = color;\n}",
+        null
+      ]
+    }
+  ],
+  "links": [
+    [
+      42,
+      29,
+      0,
+      40,
+      0,
+      "GLSL_CODE"
+    ],
+    [
+      45,
+      40,
+      1,
+      38,
+      0,
+      "MASK"
+    ],
+    [
+      46,
+      40,
+      2,
+      41,
+      0,
+      "GLSL_BUFFERS"
+    ],
+    [
+      48,
+      40,
+      2,
+      43,
+      0,
+      "GLSL_BUFFERS"
+    ],
+    [
+      50,
+      40,
+      2,
+      48,
+      0,
+      "GLSL_BUFFERS"
+    ],
+    [
+      52,
+      40,
+      0,
+      50,
+      0,
+      "IMAGE"
+    ],
+    [
+      53,
+      38,
+      0,
+      51,
+      0,
+      "IMAGE"
+    ],
+    [
+      54,
+      41,
+      0,
+      52,
+      0,
+      "IMAGE"
+    ],
+    [
+      55,
+      43,
+      0,
+      53,
+      0,
+      "IMAGE"
+    ],
+    [
+      56,
+      48,
+      0,
+      54,
+      0,
+      "IMAGE"
+    ]
+  ],
+  "groups": [],
+  "config": {},
+  "extra": {
+    "ds": {
+      "scale": 1.464100000000001,
+      "offset": {
+        "0": 112.38031491662427,
+        "1": 51.179062220864864
+      }
+    }
+  },
+  "version": 0.4
+}

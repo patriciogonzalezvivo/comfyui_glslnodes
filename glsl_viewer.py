@@ -3,13 +3,13 @@ import re
 
 import moderngl
 
-from torchvision.transforms import PILToTensor
 import torch
 import comfy.utils
 
 from .glsl_context import Context
 from .glsl_buffers import Buffer, DoubleBuffer
 from .glsl_utils import getSizeFromCode
+
 
 class GlslViewer:
     @classmethod
@@ -32,11 +32,17 @@ class GlslViewer:
     
     CATEGORY = "GLSL"
     FUNCTION = "main"
+    DESCRIPTION = """
+    This node renders a GLSL fragment shader code.
+    You must connect a GLSL fragment shader code to the 'fragment_code' input.
+    And you can optionally connect different inputs like Images (Textures), Videos(Texture Arrays), or individual values (int, float, vec2, vec3, vec4).
+    If you are working with videos or sequences of images, we recomend using glslUniforms node, so it's better cached and optimized, buy preventing changing loading all the frames everytime you edit your code.
+    """
 
-    RETURN_TYPES = ("IMAGE", "MASK")
-    RETURN_NAMES = ("images", "mask")
+    RETURN_TYPES = ("IMAGE", "MASK", "GLSL_BUFFERS",)
+    RETURN_NAMES = ("images", "mask", "buffers",)
 
-    def main(self, fragment_code, width, height, frames, fps, **kwargs):
+    def main(self, fragment_code:dict, width:int, height:int, frames:int, fps:int, **kwargs):
         # print("Optional Inputs", kwargs.keys())
 
         context = None
@@ -69,34 +75,36 @@ class GlslViewer:
         # Create a Scene Buffer
         sceneBuffer = DoubleBuffer(width, height, "u_scene", ctx=context.ctx)
 
-        buffers = []
-        DoubleBuffers = []
+        buffers = {}
+        doubleBuffers = {}
+        buffers_out = {}
 
         # Create buffers and VAOs for each appearence of #ifdef BUFFER_<X>
         found_buffers = re.findall(r'(?:^\s*)((?:#if|#elif)(?:\s*)(defined\s*\(\s*BUFFER_)(\d+)(?:\s*\))|(?:#ifdef)(?:\s*BUFFER_)(\d+)(?:\s*))', fragment_code["src"], re.MULTILINE)
         if found_buffers:
             for match in found_buffers:
-                print( match)
+                # print(match)
                 buffer_index = match[2] if match[2] is not '' else match[3]
                 buffer_name = f"u_buffer{buffer_index}"
                 buffer_size = getSizeFromCode(width, height, fragment_code["src"], buffer_name)
                 buffer_code = fragment_code.copy()
-                buffer_code["src"] = f"#define BUFFER_{buffer_index}\n" + buffer_code["src"]
-                print("Creating Buffer", buffer_name, buffer_size)
-                buffers.append( (Buffer(buffer_size[0], buffer_size[1], buffer_name, ctx=context.ctx), 
-                                 context.makeCanvasShader(buffer_code) ) )
+                buffer_code["src"] = f"#define BUFFER_{buffer_index} {buffer_name}\n" + buffer_code["src"]
+                # print("Creating Buffer", buffer_name, buffer_size)
+                buffers[buffer_name] = (Buffer(buffer_size[0], buffer_size[1], buffer_name, ctx=context.ctx), context.makeCanvasShader(buffer_code) )
+                buffers_out[buffer_name] = []
 
         found_double_buffers = re.findall(r'(?:^\s*)((?:#if|#elif)(?:\s*)(defined\s*\(\s*DOUBLE_BUFFER_)(\d+)(?:\s*\))|(?:#ifdef)(?:\s*DOUBLE_BUFFER_)(\d+)(?:\s*))', fragment_code["src"], re.MULTILINE)
         if found_double_buffers:
             for match in found_double_buffers:
+                # print(match)
                 buffer_index = match[2] if match[2] is not '' else match[3]
                 buffer_name = f"u_doubleBuffer{buffer_index}"
                 buffer_size = getSizeFromCode(width, height, fragment_code["src"], buffer_name)
                 buffer_code = fragment_code.copy()
-                buffer_code["src"] = f"#define DOUBLE_BUFFER_{buffer_index}\n" + buffer_code["src"]
-                print("Creating Double Buffer", buffer_name, buffer_size)
-                DoubleBuffers.append( (DoubleBuffer(buffer_size[0], buffer_size[1], buffer_name, ctx=context.ctx), 
-                                       context.makeCanvasShader(buffer_code) ) )
+                buffer_code["src"] = f"#define DOUBLE_BUFFER_{buffer_index} {buffer_name}\n" + buffer_code["src"]
+                # print("Creating Double Buffer", buffer_name, buffer_size)
+                doubleBuffers[buffer_name] = (DoubleBuffer(buffer_size[0], buffer_size[1], buffer_name, ctx=context.ctx), context.makeCanvasShader(buffer_code) )
+                buffers_out[buffer_name] = []
             
         # Create Shader Program
         vao = context.makeCanvasShader(fragment_code)
@@ -104,7 +112,6 @@ class GlslViewer:
         # Render Loop
         masks_out = []
         images_out = []
-        ptt = PILToTensor()
         pbar = comfy.utils.ProgressBar(frames)
 
         # Execute Render Loop for each frame
@@ -119,48 +126,57 @@ class GlslViewer:
             context.uniforms['u_time'] = float(i / fps)
 
             #### BUFFER RENDER PASSES ####
-            for buffer, buffer_vao in buffers:
+            for name in buffers:
+                buffer, buffer_vao = buffers[name]
+
                 buffer.bind()
 
                 # Set Uniforms
-                context.useUniforms(vao.program)
+                context.useUniforms(buffer_vao.program)
 
                 # Bind Textures
-                textureIndex = context.useTextures(vao.program)
+                textureIndex = context.useTextures(buffer_vao.program)
 
                 # bind buffer textures (skip current buffer)
-                for buffer2, buffer_vao2 in buffers:
-                    if buffer2.name != buffer.name:
+                for name2 in buffers:
+                    buffer2, buffer_vao2 = buffers[name2]
+                    if name2 != name:
                         buffer2.use(textureIndex, buffer_vao2.program)
                         textureIndex += 1
 
-                for buffer2, buffer_vao2 in DoubleBuffers:
+                for name2 in doubleBuffers:
+                    buffer2, buffer_vao2 = doubleBuffers[name2]
                     buffer2.use(textureIndex, buffer_vao2.program)
                     textureIndex += 1
 
                 context.ctx.clear(0.0, 0.0, 0.0, 0.0)
                 buffer_vao.render(mode=moderngl.TRIANGLES)
+                buffers_out[name].append( buffer.getTensor() )
 
-            for buffer, buffer_vao in DoubleBuffers:
+            for name in doubleBuffers:
+                buffer, buffer_vao = doubleBuffers[name]
                 buffer.bind()
 
                 # Set Uniforms
-                context.useUniforms(vao.program)
+                context.useUniforms(buffer_vao.program)
 
                 # Bind Textures
-                textureIndex = context.useTextures(vao.program)
+                textureIndex = context.useTextures(buffer_vao.program)
 
                 # bind buffer textures (skip current buffer)
-                for buffer2, buffer_vao2 in buffers:
+                for name2 in buffers:
+                    buffer2, buffer_vao2 = buffers[name2]
                     buffer2.use(textureIndex, buffer_vao2.program)
                     textureIndex += 1
                 
-                for buffer2, buffer_vao2 in DoubleBuffers:
+                for name2 in doubleBuffers:
+                    buffer2, buffer_vao2 = doubleBuffers[name2]
                     buffer2.use(textureIndex, buffer_vao2.program, prev=True)
                     textureIndex += 1
 
                 context.ctx.clear(0.0, 0.0, 0.0, 0.0)
                 buffer_vao.render(mode=moderngl.TRIANGLES)
+                buffers_out[name].append( buffer.getTensor() )
 
 
             #### MAIN RENDER PASS ####
@@ -175,11 +191,13 @@ class GlslViewer:
             textureIndex = context.useTextures(vao.program)
 
             # bind buffer textures
-            for buffer, buffer_vao in buffers:
+            for name in buffers:
+                buffer, buffer_vao = buffers[name]
                 buffer.use(textureIndex, vao.program)
                 textureIndex += 1
             
-            for buffer, buffer_vao in DoubleBuffers:
+            for name in doubleBuffers:
+                buffer, buffer_vao = doubleBuffers[name]
                 buffer.use(textureIndex, vao.program)
                 textureIndex += 1
 
@@ -187,19 +205,14 @@ class GlslViewer:
             context.ctx.clear(0.0, 0.0, 0.0, 0.0)
             vao.render(mode=moderngl.TRIANGLES)
 
-
             #### OUTPUT PASS ####
-
             # get Image in to torch tensor
-            image = sceneBuffer.getImage()
-            image = ptt(image)
-
-            image = image.permute(1, 2, 0).float().mul(1.0 / 255.0)
-            image = image.flip(0)
+            image = sceneBuffer.getTensor()
 
             # Append to outputs
             images_out.append(image[:, :, :3].unsqueeze(0))
             masks_out.append(image[:, :, 3].squeeze().unsqueeze(0))
 
+
         # Close Context
-        return (torch.cat(images_out, dim=0), torch.stack(masks_out, dim=0))
+        return (torch.cat(images_out, dim=0), torch.stack(masks_out, dim=0), buffers_out)

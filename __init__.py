@@ -8,6 +8,7 @@
 from .glsl_editors import GlslEditor, GlslEditorPro
 from .glsl_uniforms import GlslUniforms
 from .glsl_viewer import GlslViewer
+from .glsl_buffers import GlslBuffers
 from .glsl_types import *
 
 from .install import *
@@ -22,9 +23,10 @@ NODE_CLASS_MAPPINGS = {
     'vec3 (pos)': GlslVec3Pos,
     'vec4 (color)': GlslVec4Color,
     'glslUniforms': GlslUniforms,
-    'glslViewer': GlslViewer,
     'glslEditor': GlslEditor,
     'glslEditorPro': GlslEditorPro,
+    'glslViewer': GlslViewer,
+    'glslBuffers': GlslBuffers,
 }
 
 WEB_DIRECTORY = "./web"

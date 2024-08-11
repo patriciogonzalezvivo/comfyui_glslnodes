@@ -24,9 +24,14 @@ class GlslUniforms:
     
     CATEGORY = "GLSL"
     FUNCTION = "main"
-
+    
     RETURN_TYPES = ("GLSL_CONTEXT",)
     RETURN_NAMES = ("uniforms",)
+    DESCRIPTION = """
+    This node caches and optimizes inputs for GlslViewer.
+    And you can connect different inputs like Images (Textures), Videos(Texture Arrays), or individual values (int, float, vec2, vec3, vec4).
+    If you are working with videos or sequences of images, we recomend using glslUniforms node, so it's better cached and optimized, buy preventing changing loading all the frames everytime you edit your code.
+    """
 
     def main(self, **kwargs):
         context = Context()

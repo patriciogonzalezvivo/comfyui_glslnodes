@@ -151,7 +151,7 @@ class GlslViewer:
 
                 context.ctx.clear(0.0, 0.0, 0.0, 0.0)
                 buffer_vao.render(mode=moderngl.TRIANGLES)
-                buffers_out[name].append( buffer.getTensor() )
+                buffers_out[name].append( buffer.getTensor()[:, :, :3].unsqueeze(0) )
 
             for name in doubleBuffers:
                 buffer, buffer_vao = doubleBuffers[name]
@@ -176,7 +176,7 @@ class GlslViewer:
 
                 context.ctx.clear(0.0, 0.0, 0.0, 0.0)
                 buffer_vao.render(mode=moderngl.TRIANGLES)
-                buffers_out[name].append( buffer.getTensor() )
+                buffers_out[name].append( buffer.getTensor()[:, :, :3].unsqueeze(0) )
 
 
             #### MAIN RENDER PASS ####

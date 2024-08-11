@@ -127,9 +127,9 @@ class GlslBuffers:
             if f"u_buffer{index}" not in buffers:
                 return torch.zeros(1, 1, 1, 4)
             
-            return (buffers[f"u_buffer{index}"], )
+            return ( torch.cat(buffers[f"u_buffer{index}"], dim=0), )
         
         elif type == "DOUBLE_BUFFER":
             if f"u_doubleBuffer{index}" not in buffers:
                 return torch.zeros(1, 1, 1, 4)
-            return (buffers[f"u_doubleBuffer{index}"], )
+            return ( torch.cat(buffers[f"u_doubleBuffer{index}"], dim=0), )

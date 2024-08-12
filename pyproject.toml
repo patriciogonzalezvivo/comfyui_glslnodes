@@ -1,7 +1,7 @@
 [project]
 name = "comfyui_glslnodes"
 description = "A collections of nodes to support GLSL shaders inside a workflow. Provides nodes: glslViewer, glslEditor, glslEditorPro, int, float, vec2, vec3 and vec4."
-version = "1.2.2"
+version = "1.2.3"
 license = "LICENSE"
 dependencies = ["moderngl", "numpy"]
 

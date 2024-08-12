@@ -1,4 +1,4 @@
-import { app } from "../../../scripts/app.js";
+import { app } from "../../scripts/app.js";
 import { removeAllUniforms, addInput, getMaxIndex } from "./utils.js";
 
 const ViewerId = "glslViewer";

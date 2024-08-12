@@ -1,4 +1,4 @@
-const glslnode_css = `/extensions/comfyui_glslnodes/node.css`
+const glslnode_css = `extensions/comfyui_glslnodes/node.css`
 
 const load_css = (doc, url) => {
     const link = doc.createElement("link")

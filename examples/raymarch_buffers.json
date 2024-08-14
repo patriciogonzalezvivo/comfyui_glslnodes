@@ -76,8 +76,8 @@
         49
       ],
       "size": [
-        583.3439711790832,
-        676.1648724171921
+        583.343994140625,
+        676.1648897058824
       ],
       "flags": {},
       "order": 2,
@@ -126,7 +126,7 @@
           "hidden": false,
           "paused": false,
           "params": {
-            "filename": "AnimateDiff_00017.gif",
+            "filename": "AnimateDiff_00001.gif",
             "subfolder": "",
             "type": "temp",
             "format": "image/gif",
@@ -300,8 +300,8 @@
         783
       ],
       "size": [
-        286.3191777906542,
-        452.5226750423749
+        286.3191833496094,
+        452.5226792279412
       ],
       "flags": {},
       "order": 7,
@@ -350,7 +350,7 @@
           "hidden": false,
           "paused": false,
           "params": {
-            "filename": "AnimateDiff_00018.gif",
+            "filename": "AnimateDiff_00002.gif",
             "subfolder": "",
             "type": "temp",
             "format": "image/gif",
@@ -367,8 +367,8 @@
         793
       ],
       "size": [
-        278.9555414270176,
-        446.97829001563673
+        278.9555358886719,
+        446.97828584558823
       ],
       "flags": {},
       "order": 8,
@@ -417,7 +417,7 @@
           "hidden": false,
           "paused": false,
           "params": {
-            "filename": "AnimateDiff_00019.gif",
+            "filename": "AnimateDiff_00003.gif",
             "subfolder": "",
             "type": "temp",
             "format": "image/gif",
@@ -434,8 +434,8 @@
         795
       ],
       "size": [
-        271.8398389476786,
-        441.62058461942854
+        271.83984375,
+        441.6205882352941
       ],
       "flags": {},
       "order": 9,
@@ -484,7 +484,7 @@
           "hidden": false,
           "paused": false,
           "params": {
-            "filename": "AnimateDiff_00020.gif",
+            "filename": "AnimateDiff_00004.gif",
             "subfolder": "",
             "type": "temp",
             "format": "image/gif",
@@ -502,8 +502,8 @@
         782
       ],
       "size": [
-        292.63322737743056,
-        457.27678296653596
+        292.63323974609375,
+        457.2767922794118
       ],
       "flags": {},
       "order": 10,
@@ -552,7 +552,7 @@
           "hidden": false,
           "paused": false,
           "params": {
-            "filename": "AnimateDiff_00021.gif",
+            "filename": "AnimateDiff_00005.gif",
             "subfolder": "",
             "type": "temp",
             "format": "image/gif",
@@ -592,7 +592,7 @@
       "widgets_values": [
         "140",
         "fragment",
-        "#ifdef GL_ES\nprecision mediump float;\n#endif\n\nuniform sampler2D   u_buffer0;\nuniform vec2        u_resolution;\nuniform float       u_time;\n\n// SPACE\n#define RESOLUTION  u_resolution\n\n#define RAYMARCH_MULTISAMPLE 4\n#define RAYMARCH_AMBIENT vec3(0.1)\n#define RAYMARCH_BACKGROUND (RAYMARCH_AMBIENT)\n\n#include \"lygia/space/ratio.glsl\"\n#include \"lygia/sdf.glsl\"\n#include \"lygia/math/map.glsl\"\n#include \"lygia/lighting/raymarch.glsl\"\n#include \"lygia/color/space/linear2gamma.glsl\"\n\nfloat checkBoard(vec2 uv, vec2 _scale) {\n    uv = floor(fract(uv * _scale) * 2.0);\n    return min(1.0, uv.x + uv.y) - (uv.x * uv.y);\n}\n\nMaterial raymarchMap( in vec3 pos ) {\n    float check = 0.5 + checkBoard(pos.xz, vec2(1.0, 1.0)) * 0.5;\n    Material res = materialNew(vec3(check), 0.0, 0.5, planeSDF(pos));\n\n    res = opUnion( res, materialNew( vec3(1.0, 1.0, 1.0), 1.0, 0.0, sphereSDF(   pos-vec3( 0.0, 0.60, 0.0), 0.5 ) ) );\n    res = opUnion( res, materialNew( vec3(0.0, 1.0, 1.0), boxSDF(      pos-vec3( 2.0, 0.5, 0.0), vec3(0.4, 0.4, 0.4) ) ) );\n    res = opUnion( res, materialNew( vec3(0.3, 0.3, 1.0), torusSDF(    pos-vec3( 0.0, 0.5, 2.0), vec2(0.4,0.1) ) ) );\n    res = opUnion( res, materialNew( vec3(0.3, 0.1, 0.3), capsuleSDF(  pos,vec3(-2.3, 0.4,-0.2), vec3(-1.6,0.75,0.2), 0.2 ) ) );\n    res = opUnion( res, materialNew( vec3(0.5, 0.3, 0.4), triPrismSDF( pos-vec3(-2.0, 0.50,-2.0), vec2(0.5,0.1) ) ) );\n    res = opUnion( res, materialNew( vec3(0.2, 0.2, 0.8), cylinderSDF( pos-vec3( 2.0, 0.50,-2.0), vec2(0.2,0.4) ) ) );\n    res = opUnion( res, materialNew( vec3(0.7, 0.5, 0.2), coneSDF(     pos-vec3( 0.0, 0.75,-2.0), vec3(0.8,0.6,0.6) ) ) );\n    res = opUnion( res, materialNew( vec3(0.4, 0.2, 0.9), hexPrismSDF( pos-vec3(-2.0, 0.60, 2.0), vec2(0.5,0.1) ) ) );\n    res = opUnion( res, materialNew( vec3(0.1, 0.3, 0.6), pyramidSDF(  pos-vec3( 2.0, 0.10, 2.0), 1.0 ) ) );;\n\n    return res;\n}\n\nvoid main() {\n    vec4 color = vec4(0.0, 0.0, 0.0, 1.0);\n    vec2 pixel = 1.0/u_resolution;\n    vec2 st = gl_FragCoord.xy * pixel;\n    vec2 uv = ratio(st, u_resolution);\n    float time = PI + u_time;\n\n    vec3 cam = vec3( 4.5*cos(0.1*time), 2.2, 4.5*sin(0.1*time) );\n\n    float depth = 0.0;\n    Material mat;\n    \n    color = raymarch(cam, vec3(0.0), uv, mat, depth);\n\n#if defined(BUFFER_0)    \n    color.rgb = vec3( map(depth, length(cam) * 0.5, length(cam) * 3., 1.0, 0.0) );\n    \n#elif defined(BUFFER_1)\n    color.rgb = mat.albedo.rgb;\n    \n#elif defined(BUFFER_2)\n    color.rgb = mat.normal * 0.5 + 0.5;\n    \n#elif defined(BUFFER_3)\n    color.rgb = mat.position;\n    \n    \n#else\n    color = linear2gamma(color);\n    \n#endif\n\n    gl_FragColor = color;\n}",
+        "#ifdef GL_ES\nprecision mediump float;\n#endif\n\nuniform sampler2D   u_buffer0;\nuniform vec2        u_resolution;\nuniform float       u_time;\n\n// SPACE\n#define RESOLUTION  u_resolution\n\n#define RAYMARCH_MULTISAMPLE 4\n#define RAYMARCH_RETURN 2\n#define RAYMARCH_AMBIENT vec3(0.1)\n#define RAYMARCH_BACKGROUND (RAYMARCH_AMBIENT)\n\n#include \"lygia/space/ratio.glsl\"\n#include \"lygia/sdf.glsl\"\n#include \"lygia/math/map.glsl\"\n#include \"lygia/lighting/raymarch.glsl\"\n#include \"lygia/color/space/linear2gamma.glsl\"\n\nfloat checkBoard(vec2 uv, vec2 _scale) {\n    uv = floor(fract(uv * _scale) * 2.0);\n    return min(1.0, uv.x + uv.y) - (uv.x * uv.y);\n}\n\nMaterial raymarchMap( in vec3 pos ) {\n    float check = 0.5 + checkBoard(pos.xz, vec2(1.0, 1.0)) * 0.5;\n    Material res = materialNew(vec3(check), 0.0, 0.5, planeSDF(pos));\n\n    res = opUnion( res, materialNew( vec3(1.0, 1.0, 1.0), 1.0, 0.0, sphereSDF(   pos-vec3( 0.0, 0.60, 0.0), 0.5 ) ) );\n    res = opUnion( res, materialNew( vec3(0.0, 1.0, 1.0), boxSDF(      pos-vec3( 2.0, 0.5, 0.0), vec3(0.4, 0.4, 0.4) ) ) );\n    res = opUnion( res, materialNew( vec3(0.3, 0.3, 1.0), torusSDF(    pos-vec3( 0.0, 0.5, 2.0), vec2(0.4,0.1) ) ) );\n    res = opUnion( res, materialNew( vec3(0.3, 0.1, 0.3), capsuleSDF(  pos,vec3(-2.3, 0.4,-0.2), vec3(-1.6,0.75,0.2), 0.2 ) ) );\n    res = opUnion( res, materialNew( vec3(0.5, 0.3, 0.4), triPrismSDF( pos-vec3(-2.0, 0.50,-2.0), vec2(0.5,0.1) ) ) );\n    res = opUnion( res, materialNew( vec3(0.2, 0.2, 0.8), cylinderSDF( pos-vec3( 2.0, 0.50,-2.0), vec2(0.2,0.4) ) ) );\n    res = opUnion( res, materialNew( vec3(0.7, 0.5, 0.2), coneSDF(     pos-vec3( 0.0, 0.75,-2.0), vec3(0.8,0.6,0.6) ) ) );\n    res = opUnion( res, materialNew( vec3(0.4, 0.2, 0.9), hexPrismSDF( pos-vec3(-2.0, 0.60, 2.0), vec2(0.5,0.1) ) ) );\n    res = opUnion( res, materialNew( vec3(0.1, 0.3, 0.6), pyramidSDF(  pos-vec3( 2.0, 0.10, 2.0), 1.0 ) ) );;\n\n    return res;\n}\n\nvoid main() {\n    vec4 color = vec4(0.0, 0.0, 0.0, 1.0);\n    vec2 pixel = 1.0/u_resolution;\n    vec2 st = gl_FragCoord.xy * pixel;\n    vec2 uv = ratio(st, u_resolution);\n    float time = PI + u_time;\n\n    vec3 cam = vec3( 4.5*cos(0.1*time), 2.2, 4.5*sin(0.1*time) );\n\n    float depth = 0.0;\n    Material mat;\n    \n    color = raymarch(cam, vec3(0.0), uv, depth, mat);\n\n#if defined(BUFFER_0)    \n    color.rgb = vec3( map(depth, length(cam) * 0.5, length(cam) * 3., 1.0, 0.0) );\n    \n#elif defined(BUFFER_1)\n    color.rgb = mat.albedo.rgb;\n    \n#elif defined(BUFFER_2)\n    color.rgb = mat.normal * 0.5 + 0.5;\n    \n#elif defined(BUFFER_3)\n    color.rgb = mat.position;\n    \n    \n#else\n    color = linear2gamma(color);\n    \n#endif\n\n    gl_FragColor = color;\n}",
         null
       ]
     }
@@ -683,10 +683,10 @@
   "config": {},
   "extra": {
     "ds": {
-      "scale": 1.464100000000001,
+      "scale": 0.6830134553650705,
       "offset": {
-        "0": 112.38031491662427,
-        "1": 51.179062220864864
+        "0": 312.7599016388439,
+        "1": -45.37832883848841
       }
     }
   },

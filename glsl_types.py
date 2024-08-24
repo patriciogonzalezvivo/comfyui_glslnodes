@@ -9,9 +9,9 @@ class GlslInt:
     
     CATEGORY = "GLSL"
     FUNCTION = "main"
-    DESCRIPTION = """
-    This node returns an integer value.
-    """
+    # DESCRIPTION = """
+    # This node returns an integer value.
+    # """
 
     RETURN_TYPES = ("INT", )
     RETURN_NAMES = ("int", )
@@ -31,9 +31,9 @@ class GlslFloat:
     
     CATEGORY = "GLSL"
     FUNCTION = "main"
-    DESCRIPTION = """
-    This node returns a float value.
-    """
+    # DESCRIPTION = """
+    # This node returns a float value.
+    # """
 
     RETURN_TYPES = ("FLOAT", )
     RETURN_NAMES = ("float", )
@@ -54,9 +54,9 @@ class GlslVec2:
     
     CATEGORY = "GLSL"
     FUNCTION = "main"
-    DESCRIPTION = """
-    This node returns a vec2 value.
-    """
+    # DESCRIPTION = """
+    # This node returns a vec2 value.
+    # """
 
     RETURN_TYPES = ("VEC2", )
     RETURN_NAMES = ("vec2", )
@@ -76,9 +76,9 @@ class GlslVec2Pos:
     
     CATEGORY = "GLSL"
     FUNCTION = "main"
-    DESCRIPTION = """
-    This node returns a vec2 value from a 2D position.
-    """
+    # DESCRIPTION = """
+    # This node returns a vec2 value from a 2D position.
+    # """
 
     RETURN_TYPES = ("VEC2", )
     RETURN_NAMES = ("vec2", )
@@ -101,9 +101,9 @@ class GlslVec3:
     
     CATEGORY = "GLSL"
     FUNCTION = "main"
-    DESCRIPTION = """
-    This node returns a vec3 value.
-    """
+    # DESCRIPTION = """
+    # This node returns a vec3 value.
+    # """
 
     RETURN_TYPES = ("VEC3", )
     RETURN_NAMES = ("vec3", )
@@ -123,9 +123,9 @@ class GlslVec3Pos:
     
     CATEGORY = "GLSL"
     FUNCTION = "main"
-    DESCRIPTION = """
-    This node returns a vec3 value. From a 3D position.
-    """
+    # DESCRIPTION = """
+    # This node returns a vec3 value. From a 3D position.
+    # """
 
     RETURN_TYPES = ("VEC3", )
     RETURN_NAMES = ("vec3", )
@@ -149,9 +149,9 @@ class GlslVec4:
     
     CATEGORY = "GLSL"
     FUNCTION = "main"
-    DESCRIPTION = """
-    This node returns a vec4 value.
-    """
+    # DESCRIPTION = """
+    # This node returns a vec4 value.
+    # """
 
     RETURN_TYPES = ("VEC4", )
     RETURN_NAMES = ("vec3", )
@@ -171,9 +171,9 @@ class GlslVec4Color:
     
     CATEGORY = "GLSL"
     FUNCTION = "main"
-    DESCRIPTION = """
-    This node returns a vec4 value from a color.
-    """
+    # DESCRIPTION = """
+    # This node returns a vec4 value from a color.
+    # """
 
     RETURN_TYPES = ("VEC4", )
     RETURN_NAMES = ("vec4", )

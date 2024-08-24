@@ -117,9 +117,9 @@ class GlslBuffers:
     CATEGORY = "GLSL"
     FUNCTION = "main"
     RETURN_TYPES = ("IMAGE",)
-    DESCRIPTION = """
-    This node allows you to extract the content of a buffer or double buffer.
-    """
+    # DESCRIPTION = """
+    # This node allows you to extract the content of a buffer or double buffer.
+    # """
 
     def main(self, buffers:dict, type:str, index:int, **kwargs):
         if type == "BUFFER":

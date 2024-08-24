@@ -2,6 +2,8 @@ import platform
 import moderngl
 import numpy as np
 
+import torch
+
 from .glsl_textures import ImageTexture, ImageArrayTexture
 from .glsl_utils import GL_BACKENDS, GL_PLATFORMS
 from .glsl_utils import getDefaultVertexShader, getFragmentShader
@@ -29,13 +31,13 @@ class Context:
 
     def loadTexture(self, name, image):
         if len(image) is 1:
-            tex = ImageTexture(image.cpu().numpy()[0], name)
+            tex = ImageTexture(image.contiguous().cpu().numpy()[0], name)
             self.textures.append( tex )
             self.uniforms[f"{name}Resolution"] = (float(tex.width), float(tex.height))
             self.defines.append((f"{name.upper()}_TYPE", "sampler2D"))
             
         else:
-            tex = ImageArrayTexture(image.cpu().numpy(), name)
+            tex = ImageArrayTexture(image.contiguous().cpu().numpy(), name)
             self.textures.append( tex )
             self.uniforms[f"{name}Resolution"] = (float(tex.width), float(tex.height))
             self.uniforms[f"{name}TotalFrames"] = float(tex.totalFrames)

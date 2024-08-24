@@ -32,12 +32,12 @@ class GlslViewer:
     
     CATEGORY = "GLSL"
     FUNCTION = "main"
-    DESCRIPTION = """
-    This node renders a GLSL fragment shader code.
-    You must connect a GLSL fragment shader code to the 'fragment_code' input.
-    And you can optionally connect different inputs like Images (Textures), Videos(Texture Arrays), or individual values (int, float, vec2, vec3, vec4).
-    If you are working with videos or sequences of images, we recomend using glslUniforms node, so it's better cached and optimized, buy preventing changing loading all the frames everytime you edit your code.
-    """
+    # DESCRIPTION = """
+    # This node renders a GLSL fragment shader code.
+    # You must connect a GLSL fragment shader code to the 'fragment_code' input.
+    # And you can optionally connect different inputs like Images (Textures), Videos(Texture Arrays), or individual values (int, float, vec2, vec3, vec4).
+    # If you are working with videos or sequences of images, we recomend using glslUniforms node, so it's better cached and optimized, buy preventing changing loading all the frames everytime you edit your code.
+    # """
 
     RETURN_TYPES = ("IMAGE", "MASK", "GLSL_BUFFERS",)
     RETURN_NAMES = ("images", "mask", "buffers",)

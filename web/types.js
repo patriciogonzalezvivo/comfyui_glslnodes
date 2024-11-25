@@ -86,7 +86,7 @@ class Vec2PosWidget {
     }
 
     mouse(e, pos, node) {
-        if (e.type === 'pointermove') {
+        if (e.type === 'pointermove' || e.type === 'pointerdown') {
             this.value = [  (pos[0] / this.wWidth - 0.5) * 2.0, 
                             ((pos[1] - this.wY) / this.wHeight - 0.5) * 2.0];
             return true

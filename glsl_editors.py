@@ -1,4 +1,4 @@
-from .glsl_utils import resolveLygia, GLSL_VERSIONS, SHADER_TYPES, DEFAULT_FRAGMENT_SHADER, DEFAULT_SHADERTOY_SHADER
+from .glsl_utils import resolveLygia, resolveLygiaLocal, GLSL_VERSIONS, SHADER_TYPES, DEFAULT_FRAGMENT_SHADER, DEFAULT_SHADERTOY_SHADER
 
 
 
@@ -9,8 +9,10 @@ class GlslEditor:
         return {
             "required": {
                 "version" : (GLSL_VERSIONS, {"default": "140" }),
-                "code": ("STRING", {"multiline": True, "default": DEFAULT_FRAGMENT_SHADER}),
                 "type": (SHADER_TYPES, { "default": "fragment" }),
+                "code": ("STRING", {"multiline": True, "default": DEFAULT_FRAGMENT_SHADER}),
+                "local_include": ("BOOLEAN", {"default": False}),
+                "include_root": ("STRING", {"default": "", "multiline": False}),
             },
         }
     CATEGORY = "GLSL"
@@ -22,19 +24,19 @@ class GlslEditor:
     In types for the moment we only support fragment shaders. "fragment (ShaderToy)" creates wrappes so it follows the ShaderToy specs.
     """
 
-    def main(self, version:str, type:str, code:str):
+    def main(self, version:str, type:str, code:str, local_includes:bool, include_root:str):
         out = {}
 
         if type == "fragment (shadertoy)":
             out["version"] = "400"
             out["type"] = "fragment"
-            out["src"] = resolveLygia(code)
+            out["src"] = resolveLygiaLocal(code, include_root) if local_includes else resolveLygia(code)
             out["specs"] = "shadertoy"
             return (out, )
         else:
             out["version"] = version
             out["type"] = type
-            out["src"] = resolveLygia(code)
+            out["src"] = resolveLygiaLocal(code, include_root) if local_includes else resolveLygia(code)
             out["specs"] = "raw"
             return (out, )
     
@@ -47,6 +49,8 @@ class GlslEditorPro:
                 "version" : (GLSL_VERSIONS, {"default": "140" }),
                 "type": (SHADER_TYPES, { "default": "fragment" }),
                 "code": ("GLSL_STRING", {"default": DEFAULT_FRAGMENT_SHADER}),
+                "local_includes": ("BOOLEAN", {"default": False}),
+                "include_root": ("STRING", {"default": "", "multiline": False}),
             },
         }
     CATEGORY = "GLSL"
@@ -58,18 +62,18 @@ class GlslEditorPro:
     # In types for the moment we only support fragment shaders. "fragment (ShaderToy)" creates wrappes so it follows the ShaderToy specs.
     # """
 
-    def main(self, version:str, type:str, code:str):
+    def main(self, version:str, type:str, code:str, local_includes:bool, include_root:str):
         out = {}
 
         if type == "fragment (shadertoy)":
             out["version"] = "400"
             out["type"] = "fragment"
-            out["src"] = resolveLygia(code)
+            out["src"] = resolveLygiaLocal(code, include_root) if local_includes else resolveLygia(code)
             out["specs"] = "shadertoy"
             return (out, )
         else:
             out["version"] = version
             out["type"] = type
-            out["src"] = resolveLygia(code)
+            out["src"] = resolveLygiaLocal(code, include_root) if local_includes else resolveLygia(code)
             out["specs"] = "raw"
             return (out, )

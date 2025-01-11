@@ -1,6 +1,8 @@
 import requests
 import re
 import numpy as np
+import os
+import pathlib
 
 GL_BACKENDS = {
     "Linux": "egl",
@@ -138,6 +140,33 @@ def getIp():
         s.close()
     return IP
 
+
+class SubstituteIncludes:
+    def __init__(self):
+        self.processedIncludes = set()
+
+    def substitute(self, text: str, current_dir: str):
+        out = ''
+        for line in text.splitlines():
+            regexp = r'^#include\s*["|<](.*)["|>]'
+            if match := re.search(regexp, line, re.IGNORECASE):
+                filename = f'{current_dir}/{match.group(1)}'
+                file_path = pathlib.Path(filename)
+                norm_path = os.path.normpath(file_path)
+                if not norm_path in self.processedIncludes:
+                    self.processedIncludes.add(norm_path)
+                    file_content = file_path.read_text()
+                    new_dir = os.path.dirname(filename)
+                    file_content = self.substitute(file_content, new_dir)
+                    out += file_content + "\n"
+            else:
+                out += line + "\n"
+        return out
+
+def resolveLygiaLocal(src: str, include_root: str):
+    #glsl_dir = 'C:/Users/shadi/Desktop/RL/TouchDesigner/shaders'
+    substituter = SubstituteIncludes()
+    return substituter.substitute(src, include_root)
 
 def resolveLygia(src: str):
     source = ""

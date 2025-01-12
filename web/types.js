@@ -86,9 +86,10 @@ class Vec2PosWidget {
     }
 
     mouse(e, pos, node) {
-        if (e.type === 'pointermove') {
+        if (e.type === 'pointermove' || e.type === 'pointerdown') {
             this.value = [  (pos[0] / this.wWidth - 0.5) * 2.0, 
                             ((pos[1] - this.wY) / this.wHeight - 0.5) * 2.0];
+            return true
         }
     }
 
@@ -240,6 +241,7 @@ class Vec3PosWidget {
         }
         else if (e.type === 'pointerup') {
         }
+        return true
     }
 
     computeSize(width) {
@@ -464,6 +466,7 @@ class Vec4ColorWidget {
         let b = [p, p, t, v, v, q][mod];
 
         this.value = [r,g,b, 1.0];
+        return true
     }
 
     computeSize(width) {

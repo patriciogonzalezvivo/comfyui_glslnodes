@@ -25,7 +25,7 @@ class GlslFloat:
     def INPUT_TYPES(cls):
         return {
             "required": {
-                "value": ("FLOAT", { "default": 0.0, "step": 0.01 }),
+                "value": ("FLOAT", { "default": 0.0, "min": -0xffffffffffffffff, "max": 0xffffffffffffffff, "step": 0.001 }),
             }
         }
     
@@ -47,8 +47,8 @@ class GlslVec2:
     def INPUT_TYPES(cls):
         return {
             "required": {
-                "x": ("FLOAT", { "default": 0.0, "step": 0.01 }),
-                "y": ("FLOAT", { "default": 0.0, "step": 0.01 }),
+                "x": ("FLOAT", { "default": 0.0, "min": -0xffffffffffffffff, "max": 0xffffffffffffffff, "step": 0.001 }),
+                "y": ("FLOAT", { "default": 0.0, "min": -0xffffffffffffffff, "max": 0xffffffffffffffff, "step": 0.001 }),
             }
         }
     
@@ -93,9 +93,9 @@ class GlslVec3:
     def INPUT_TYPES(cls):
         return {
             "required": {
-                "x": ("FLOAT", { "default": 0.0, "step": 0.01 }),
-                "y": ("FLOAT", { "default": 0.0, "step": 0.01 }),
-                "z": ("FLOAT", { "default": 0.0, "step": 0.01 }),
+                "x": ("FLOAT", { "default": 0.0, "min": -0xffffffffffffffff, "max": 0xffffffffffffffff, "step": 0.001 }),
+                "y": ("FLOAT", { "default": 0.0, "min": -0xffffffffffffffff, "max": 0xffffffffffffffff, "step": 0.001 }),
+                "z": ("FLOAT", { "default": 0.0, "min": -0xffffffffffffffff, "max": 0xffffffffffffffff, "step": 0.001 }),
             }
         }
     
@@ -140,10 +140,10 @@ class GlslVec4:
     def INPUT_TYPES(cls):
         return {
             "required": {
-                "x": ("FLOAT", { "default": 0.0, "step": 0.01 }),
-                "y": ("FLOAT", { "default": 0.0, "step": 0.01 }),
-                "z": ("FLOAT", { "default": 0.0, "step": 0.01 }),
-                "w": ("FLOAT", { "default": 0.0, "step": 0.01 }),
+                "x": ("FLOAT", { "default": 0.0, "min": -0xffffffffffffffff, "max": 0xffffffffffffffff, "step": 0.001 }),
+                "y": ("FLOAT", { "default": 0.0, "min": -0xffffffffffffffff, "max": 0xffffffffffffffff, "step": 0.001 }),
+                "z": ("FLOAT", { "default": 0.0, "min": -0xffffffffffffffff, "max": 0xffffffffffffffff, "step": 0.001 }),
+                "w": ("FLOAT", { "default": 0.0, "min": -0xffffffffffffffff, "max": 0xffffffffffffffff, "step": 0.001 }),
             }
         }
     

@@ -163,8 +163,7 @@ class SubstituteIncludes:
                 out += line + "\n"
         return out
 
-def resolveLygiaLocal(src: str, include_root: str):
-    #glsl_dir = 'C:/Users/shadi/Desktop/RL/TouchDesigner/shaders'
+def resolveLocalIncludes(src: str, include_root: str):
     substituter = SubstituteIncludes()
     return substituter.substitute(src, include_root)
 

@@ -1,4 +1,4 @@
-from .glsl_utils import resolveLygia, GLSL_VERSIONS, SHADER_TYPES, DEFAULT_FRAGMENT_SHADER, DEFAULT_SHADERTOY_SHADER
+from .glsl_utils import resolveIncludes, GLSL_VERSIONS, SHADER_TYPES, DEFAULT_FRAGMENT_SHADER, DEFAULT_SHADERTOY_SHADER
 
 
 
@@ -28,13 +28,13 @@ class GlslEditor:
         if type == "fragment (shadertoy)":
             out["version"] = "400"
             out["type"] = "fragment"
-            out["src"] = resolveLygia(code)
+            out["src"] = resolveIncludes(code)
             out["specs"] = "shadertoy"
             return (out, )
         else:
             out["version"] = version
             out["type"] = type
-            out["src"] = resolveLygia(code)
+            out["src"] = resolveIncludes(code)
             out["specs"] = "raw"
             return (out, )
     
@@ -64,12 +64,12 @@ class GlslEditorPro:
         if type == "fragment (shadertoy)":
             out["version"] = "400"
             out["type"] = "fragment"
-            out["src"] = resolveLygia(code)
+            out["src"] = resolveIncludes(code)
             out["specs"] = "shadertoy"
             return (out, )
         else:
             out["version"] = version
             out["type"] = type
-            out["src"] = resolveLygia(code)
+            out["src"] = resolveIncludes(code)
             out["specs"] = "raw"
             return (out, )

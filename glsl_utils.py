@@ -1,6 +1,8 @@
 import requests
 import re
 import numpy as np
+import os
+import pathlib
 
 GL_BACKENDS = {
     "Linux": "egl",
@@ -13,6 +15,8 @@ GL_PLATFORMS = {
 }
 
 GLSL_VERSIONS = ["100", "120", "130", "140", "150", "330", "330 core", "400", "410", "420", "430", "440"]
+
+INCLUDE_ROOT = ""
 
 SHADER_TYPES = ["fragment", "fragment (shadertoy)"]
 
@@ -138,6 +142,56 @@ def getIp():
         s.close()
     return IP
 
+
+class SubstituteIncludes:
+    def __init__(self):
+        self.processedIncludes = set()
+
+    def fetchLocalInclude(self, file_path, filename):
+        norm_path = os.path.normpath(file_path)
+        if not norm_path in self.processedIncludes:
+            self.processedIncludes.add(norm_path)
+            file_content = file_path.read_text()
+            new_dir = os.path.dirname(filename)
+            file_content = self.substitute(file_content, new_dir)
+            return file_content
+        else:
+            return ""
+
+    def fetchRemoteLygia(self, url):
+        url = url.replace("lygia", "https://lygia.xyz")
+        response = requests.get(url, headers={
+            "Origin": getIp() + ":8188",
+        })
+        if response.status_code == 200:
+            return response.text
+        else:
+            print("Failed to fetch", url)
+            return ""
+
+    def substitute(self, text: str, current_dir: str):
+        out = ''
+        for line in text.splitlines():
+            regexp = r'^#include\s*["|<](.*)["|>]'
+            if match := re.search(regexp, line, re.IGNORECASE):
+                url = match.group(1)
+                filename = f'{current_dir}/{url}'
+                file_path = pathlib.Path(filename)     
+                if file_path.exists():
+                    print("Adding local dependency", url)
+                    out += self.fetchLocalInclude(file_path, filename) + "\n"
+                elif url.startswith("lygia"):
+                    print("Adding remote Lygia dependency", url)
+                    out += self.fetchRemoteLygia(url) + "\n"
+                else:
+                    print(f'File path {file_path} not found')
+            else:
+                out += line + "\n"
+        return out
+
+def resolveIncludes(src: str):
+    substituter = SubstituteIncludes()
+    return substituter.substitute(src, INCLUDE_ROOT)
 
 def resolveLygia(src: str):
     source = ""

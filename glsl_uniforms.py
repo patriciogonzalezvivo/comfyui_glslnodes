@@ -9,16 +9,6 @@ class GlslUniforms:
                 # TODO: add support for vertex shader and 3D models
                 # "vertex_shader": ("STRING"),
                 # "3D_model": ("3D_MODEL", { "default": None }),
-
-                "u_tex0": ("IMAGE", { "multi": True }),
-                "u_tex1": ("IMAGE", { "multi": True }),
-                "u_tex2": ("IMAGE", { "multi": True }),
-                "u_tex3": ("IMAGE", { "multi": True }),
-
-                "u_val0": ("*", { "multi": True }),
-                "u_val1": ("*", { "multi": True }),
-                "u_val2": ("*", { "multi": True }),
-                "u_val3": ("*", { "multi": True }),
             }
         }
     

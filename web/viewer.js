@@ -33,12 +33,6 @@ app.registerExtension({
         const onConfigure = nodeType.prototype.onConfigure;
 		nodeType.prototype.onConfigure = function () {
 		    const r = onConfigure ? onConfigure.apply(this, arguments) : undefined;
-			
-            console.log("CONFIGURE NODE " + nodeData.name );
-            console.log("INPUTS " + this.inputs.length);
-             for (let i = 0; i < this.inputs.length; i++) {
-                 console.log(this.inputs[i].name);
-            }
 
             if (this.inputs.length > 1) {
                 let last_index = this.inputs.length - 1;

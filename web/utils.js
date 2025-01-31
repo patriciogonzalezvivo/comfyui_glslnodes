@@ -91,7 +91,7 @@ export const addInput = (node, index, str, type) => {
     if (index > firstUniformIndex) 
         name = getNextName(node, str);
     else
-        name = str + (index-firstUniformIndex+1)
+        name = str + Math.max(index-firstUniformIndex+1, 0);
 
     node.graph.beforeChange();
     

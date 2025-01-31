@@ -27,6 +27,27 @@ app.registerExtension({
             return r
         }
 
+        // List of supported callbacks:
+        // https://github.com/jagenjo/litegraph.js/tree/master/guides
+        // https://github.com/jagenjo/litegraph.js/blob/master/doc/files/.._src_litegraph.js.html
+        const onConfigure = nodeType.prototype.onConfigure;
+		nodeType.prototype.onConfigure = function () {
+		    const r = onConfigure ? onConfigure.apply(this, arguments) : undefined;
+			
+            console.log("CONFIGURE NODE " + nodeData.name );
+            console.log("INPUTS " + this.inputs.length);
+             for (let i = 0; i < this.inputs.length; i++) {
+                 console.log(this.inputs[i].name);
+            }
+
+            if (this.inputs.length > 1) {
+                let last_index = this.inputs.length - 1;
+                this.removeInput(last_index);
+            }
+            
+            return r;
+		};
+
         const onConnectionsChange = nodeType.prototype.onConnectionsChange
         nodeType.prototype.onConnectionsChange = function (...args) {
             const [_type, index, connected, link_info, ioSlot] = args

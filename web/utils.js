@@ -71,12 +71,28 @@ export const getMaxIndex = (node, str) => {
 
 export const getNextName = (node, str) => { return str + (getMaxIndex(node, str) + 1); }
 
-export const addInput = (node, index, str, type, unique=true) => {
+export const findFirstUniformIndex = (node) => {
+    for (let i = 0; i < node.inputs.length; i++) {
+        if (node.inputs[i].name.startsWith("u_") || 
+            node.inputs[i].name === "uniforms" ||
+            node.inputs[i].name === "vertex_code" ||
+            node.inputs[i].name === "3D model"
+        ) {
+            return i;
+        }
+    }
+    return -1;
+}
+
+export const addInput = (node, index, str, type) => {
     let name = str;
 
-    if (unique) 
+    let firstUniformIndex = findFirstUniformIndex(node);
+    if (index > firstUniformIndex) 
         name = getNextName(node, str);
-    
+    else
+        name = str + Math.max(index-firstUniformIndex+1, 0);
+
     node.graph.beforeChange();
     
     node.inputs[index].name = name;

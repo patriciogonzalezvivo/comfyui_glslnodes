@@ -49,7 +49,7 @@ app.registerExtension({
                 ? onConnectionsChange.apply(this, args)
                 : undefined
 
-            if (link_info === undefined) {
+            if (link_info === undefined || link_info === null) {
                 return r
             }
             
